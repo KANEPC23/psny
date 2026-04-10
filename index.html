@@ -23,6 +23,9 @@
 html { scroll-behavior: smooth; }
 body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
 
+/* MAX WIDTH WRAPPER */
+.mw { max-width: 1400px; margin: 0 auto; width: 100%; }
+
 /* NAV */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -31,6 +34,7 @@ nav {
   background: rgba(8,8,9,0.94); backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
 }
+nav .mw { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 .nav-logo { font-family: 'Barlow Condensed', sans-serif; font-size: 21px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
 .nav-logo span { color: var(--yellow); }
 .nav-links { display: flex; gap: 36px; list-style: none; }
@@ -106,6 +110,7 @@ h1 .accent { color: var(--yellow); display: block; }
 
 /* SECTIONS */
 .section { padding: 96px 48px; }
+.section > * { max-width: 1400px; margin-left: auto; margin-right: auto; }
 .section-label { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--yellow); margin-bottom: 18px; }
 .section-title { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(40px, 6vw, 72px); font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.92; }
 .section-title span { color: var(--yellow); }
@@ -182,7 +187,8 @@ h1 .accent { color: var(--yellow); display: block; }
 .app-promo p { font-size: 13px; color: var(--muted); line-height: 1.65; }
 
 /* FOOTER */
-footer { border-top: 1px solid var(--border); padding: 36px 48px; display: flex; justify-content: space-between; align-items: center; }
+footer { border-top: 1px solid var(--border); padding: 36px 48px; }
+footer .mw { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
 .footer-logo { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 900; letter-spacing: 0.1em; }
 .footer-logo span { color: var(--yellow); }
 .footer-links { display: flex; gap: 28px; }
@@ -193,14 +199,16 @@ footer { border-top: 1px solid var(--border); padding: 36px 48px; display: flex;
 <body>
 
 <nav>
-  <div class="nav-logo">PLATINUM<span>.</span>NY</div>
-  <ul class="nav-links">
-    <li><a href="#services">Services</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#gallery">Gallery</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <a href="#contact" class="nav-cta">Get a Quote</a>
+  <div class="mw">
+    <div class="nav-logo">PLATINUM<span>.</span>NY</div>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Get a Quote</a>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -517,14 +525,16 @@ footer { border-top: 1px solid var(--border); padding: 36px 48px; display: flex;
 </section>
 
 <footer>
-  <div class="footer-logo">PLATINUM<span>.</span>NY</div>
-  <div class="footer-links">
-    <a href="#services">Services</a>
-    <a href="#about">About</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#contact">Contact</a>
+  <div class="mw">
+    <div class="footer-logo">PLATINUM<span>.</span>NY</div>
+    <div class="footer-links">
+      <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="footer-copy">© 2025 Platinum Services NY LLC · Long Island City, NY</div>
   </div>
-  <div class="footer-copy">© 2025 Platinum Services NY LLC · Long Island City, NY</div>
 </footer>
 
 </body>
