@@ -154,10 +154,19 @@ h1 .accent { color: var(--yellow); display: block; }
 .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); }
 .gallery-item { background: var(--card2); aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; transition: opacity 0.2s; }
 .gallery-item:hover { opacity: 0.85; }
+.gallery-item img { width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.5s ease; }
+.gallery-item:hover img { transform:scale(1.04); }
+.gallery-caption { position:absolute;bottom:0;left:0;right:0;padding:12px 16px;background:linear-gradient(to top,rgba(3,8,46,0.85),transparent);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);opacity:0;transition:opacity 0.3s; }
+.gallery-item:hover .gallery-caption { opacity:1; }
 .gallery-placeholder { display: flex; flex-direction: column; align-items: center; gap: 12px; color: var(--steel); }
 .gallery-placeholder svg { width: 40px; height: 40px; opacity: 0.4; }
 .gallery-placeholder span { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-family: 'DM Mono', monospace; opacity: 0.5; }
 .gallery-item:nth-child(1) { grid-column: span 2; }
+
+/* VIDEO HERO */
+.hero-video-wrap { position:absolute;inset:0;overflow:hidden;z-index:0; }
+.hero-video-wrap iframe { position:absolute;top:50%;left:50%;width:177.78vh;height:100vh;min-width:100%;min-height:56.25vw;transform:translate(-50%,-50%);pointer-events:none;opacity:0.3; }
+.hero-video-overlay { position:absolute;inset:0;z-index:1;background:linear-gradient(160deg,rgba(3,8,46,0.82) 0%,rgba(3,8,46,0.6) 50%,rgba(7,21,64,0.82) 100%); }
 
 /* CONTACT */
 #contact { }
@@ -216,9 +225,12 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg">
-    <div class="hero-bg-base"></div>
+    <div class="hero-video-wrap">
+      <iframe src="https://www.youtube-nocookie.com/embed/opiPSM6MPZY?autoplay=1&mute=1&loop=1&playlist=opiPSM6MPZY&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+    <div class="hero-video-overlay"></div>
+    <div class="hero-bg-base" style="opacity:0.4;"></div>
     <div class="hero-grid"></div>
-    <div class="hero-glow"></div>
     <div class="hero-fade"></div>
     <!-- Scaffolding pipe decoration -->
     <div class="pipe-v" style="right:200px;top:0;height:100%;opacity:0.5;"></div>
@@ -419,40 +431,28 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
   <h2 class="section-title" style="margin-bottom:48px;">Work <span>In The Field</span></h2>
   <div class="gallery-grid">
     <div class="gallery-item" style="grid-column: span 2; aspect-ratio: 16/7;">
-      <div class="gallery-placeholder">
-        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="8" width="36" height="26" rx="2"/><circle cx="20" cy="21" r="7"/><circle cx="20" cy="21" r="3"/><path d="M14 8 L8 2 M26 8 L32 2"/></svg>
-        <span>Manhattan — Pipe Scaffold</span>
-      </div>
+      <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=1400&q=80" alt="NYC Skyline Aerial">
+      <div class="gallery-caption">Manhattan — NYC Skyline</div>
     </div>
     <div class="gallery-item">
-      <div class="gallery-placeholder">
-        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="8" width="36" height="26" rx="2"/><circle cx="20" cy="21" r="7"/><circle cx="20" cy="21" r="3"/></svg>
-        <span>Brooklyn — Sidewalk Shed</span>
-      </div>
+      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80" alt="Construction Site NYC">
+      <div class="gallery-caption">Brooklyn — Construction Site</div>
     </div>
     <div class="gallery-item">
-      <div class="gallery-placeholder">
-        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="8" width="36" height="26" rx="2"/><circle cx="20" cy="21" r="7"/><circle cx="20" cy="21" r="3"/></svg>
-        <span>Queens — System Scaffold</span>
-      </div>
+      <img src="https://images.unsplash.com/photo-1590579491624-f98f36d4c763?auto=format&fit=crop&w=800&q=80" alt="Scaffolding System">
+      <div class="gallery-caption">Queens — System Scaffold</div>
     </div>
     <div class="gallery-item">
-      <div class="gallery-placeholder">
-        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="8" width="36" height="26" rx="2"/><circle cx="20" cy="21" r="7"/><circle cx="20" cy="21" r="3"/></svg>
-        <span>Bronx — Custom Shed</span>
-      </div>
+      <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&q=80" alt="NYC Buildings">
+      <div class="gallery-caption">Bronx — Pipe Scaffold</div>
     </div>
     <div class="gallery-item">
-      <div class="gallery-placeholder">
-        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="8" width="36" height="26" rx="2"/><circle cx="20" cy="21" r="7"/><circle cx="20" cy="21" r="3"/></svg>
-        <span>Staten Island — Shoring</span>
-      </div>
+      <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80" alt="Construction Workers">
+      <div class="gallery-caption">Staten Island — Shoring</div>
     </div>
-    <div class="gallery-item" style="grid-column: span 1;">
-      <div class="gallery-placeholder">
-        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="8" width="36" height="26" rx="2"/><circle cx="20" cy="21" r="7"/><circle cx="20" cy="21" r="3"/></svg>
-        <span>LIC — Hoist Install</span>
-      </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1522083165195-3424ed129620?auto=format&fit=crop&w=800&q=80" alt="NYC Night Skyline">
+      <div class="gallery-caption">LIC — Custom Sidewalk Shed</div>
     </div>
   </div>
 </section>
