@@ -3,785 +3,1897 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Platinum Field Command</title>
+<title>Platinum Field Ops</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --black:  #03082E;
-  --bg:     #05102E;
-  --panel:  #071540;
-  --card:   #0C1E55;
-  --card2:  #102460;
-  --border: #1535B0;
-  --border2:#1A45CC;
-  --yellow: #F5C518;
-  --ydim:   rgba(245,197,24,0.12);
-  --ytext:  rgba(245,197,24,0.7);
-  --white:  #EEF2FF;
-  --muted:  #7B95D4;
-  --green:  #34C77B;
-  --red:    #EF5B5B;
-  --blue:   #0A38F2;
-  --royal:  #0A38F2;
+  --navy:   #0B1224;
+  --navy2:  #111A30;
+  --navy3:  #19243D;
+  --border: rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);
+  --bg:     #F0F2F7;
+  --bg2:    #E8EBF2;
+  --surface:#FFFFFF;
+  --text:   #0F1724;
+  --muted:  #6B7794;
+  --subtle: #9AA3BA;
+
+  --plat:   #0A38F2;
+  --plat-l: #EEF1FF;
+  --plat-b: rgba(10,56,242,0.12);
+  --rock:   #D97706;
+  --rock-l: #FFF8EC;
+  --rock-b: rgba(217,119,6,0.12);
+  --fort:   #059669;
+  --fort-l: #EDFAF4;
+  --fort-b: rgba(5,150,105,0.12);
+  --trans:  #6B7794;
+  --trans-l:#F4F5F8;
+  --trans-b:rgba(107,119,148,0.12);
+
+  --gold:   #F0B429;
+  --red:    #DC2626;
+  --amber:  #F59E0B;
+  --green:  #10B981;
+
+  --sidebar-w: 220px;
+  --sidebar-w-c: 64px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;}
 
-/* LOGIN */
-#login-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:0;}
-.login-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(240,180,41,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(240,180,41,0.03) 1px,transparent 1px);background-size:60px 60px;}
-.login-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(240,180,41,0.05) 0%,transparent 60%);}
-.login-box{position:relative;z-index:1;background:var(--panel);border:1px solid var(--border);padding:48px;width:380px;}
-.login-logo{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
-.login-logo span{color:var(--yellow);}
-.login-sub{font-size:12px;color:var(--muted);letter-spacing:0.06em;margin-bottom:36px;font-family:'DM Mono',monospace;}
-.login-field{margin-bottom:16px;}
-.login-field label{display:block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.login-field input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--white);padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;border-radius:0;}
-.login-field input:focus{border-color:var(--yellow);}
-.login-btn{width:100%;margin-top:8px;background:var(--yellow);color:var(--black);border:none;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;}
-.login-btn:hover{opacity:0.85;}
-.login-note{margin-top:16px;font-size:11px;color:var(--muted);text-align:center;font-family:'DM Mono',monospace;}
+/* ── SIDEBAR ── */
+#sidebar {
+  width:var(--sidebar-w);min-width:var(--sidebar-w);
+  background:var(--navy);
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--border);
+  transition:width .2s,min-width .2s;
+  position:relative;z-index:10;
+}
+#sidebar.collapsed{width:var(--sidebar-w-c);min-width:var(--sidebar-w-c);}
+.sb-logo{
+  padding:20px 16px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.sb-logo-mark{
+  width:34px;height:34px;min-width:34px;
+  background:var(--plat);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:900;color:#fff;
+  letter-spacing:.04em;
+}
+.sb-logo-text{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:700;
+  color:#fff;letter-spacing:.06em;
+  white-space:nowrap;overflow:hidden;
+  transition:opacity .15s;
+}
+.sb-logo-sub{font-size:10px;font-weight:400;color:rgba(255,255,255,0.4);display:block;letter-spacing:.08em;}
+#sidebar.collapsed .sb-logo-text{opacity:0;width:0;}
 
-/* MAIN APP */
-#app{display:none;flex-direction:column;height:100vh;}
+.sb-nav{flex:1;padding:8px 0;overflow-y:auto;}
+.sb-section{
+  font-size:9px;font-weight:600;
+  color:rgba(255,255,255,.3);
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:12px 16px 4px;
+  white-space:nowrap;overflow:hidden;
+}
+#sidebar.collapsed .sb-section{opacity:0;}
+
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 16px;cursor:pointer;
+  color:rgba(255,255,255,.55);
+  font-size:13px;font-weight:400;
+  white-space:nowrap;
+  position:relative;
+  transition:background .15s,color .15s;
+  border-left:2px solid transparent;
+}
+.nav-item:hover{background:var(--navy3);color:rgba(255,255,255,.85);}
+.nav-item.active{
+  background:var(--navy3);
+  color:#fff;
+  border-left-color:var(--plat);
+}
+.nav-icon{
+  width:18px;height:18px;min-width:18px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+}
+.nav-label{overflow:hidden;transition:opacity .15s;}
+#sidebar.collapsed .nav-label{opacity:0;width:0;}
+.nav-badge{
+  margin-left:auto;
+  background:var(--red);color:#fff;
+  font-size:10px;font-weight:600;
+  padding:1px 6px;border-radius:8px;
+  min-width:18px;text-align:center;
+  transition:opacity .15s;
+}
+#sidebar.collapsed .nav-badge{opacity:0;}
+
+.sb-collapse{
+  padding:12px 16px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+  cursor:pointer;color:rgba(255,255,255,.35);
+  font-size:12px;
+  transition:color .15s;
+}
+.sb-collapse:hover{color:rgba(255,255,255,.7);}
+.sb-collapse-icon{font-size:14px;transition:transform .2s;}
+#sidebar.collapsed .sb-collapse-icon{transform:rotate(180deg);}
+#sidebar.collapsed .sb-collapse span{opacity:0;}
+
+/* ── MAIN ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
 /* TOP BAR */
-.topbar{height:56px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;flex-shrink:0;}
-.topbar-logo{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;margin-right:8px;}
-.topbar-logo span{color:var(--yellow);}
-.topbar-divider{width:1px;height:28px;background:var(--border);}
-.topbar-badge{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:0.1em;}
-.topbar-badge::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite;}
-.topbar-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
-.topbar-user{display:flex;align-items:center;gap:10px;}
-.user-avatar{width:32px;height:32px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--black);}
-.user-name{font-size:13px;font-weight:500;}
-.user-role{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;}
-.notif-btn{background:var(--card);border:1px solid var(--border);padding:6px 10px;cursor:pointer;color:var(--muted);position:relative;transition:color 0.2s;}
-.notif-btn:hover{color:var(--white);}
-.notif-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;background:var(--yellow);border-radius:50%;border:2px solid var(--panel);}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.topbar{
+  background:var(--surface);
+  border-bottom:1px solid var(--bg2);
+  padding:0 24px;
+  height:56px;
+  display:flex;align-items:center;gap:16px;
+  flex-shrink:0;
+}
+.topbar-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:700;
+  letter-spacing:.04em;
+}
+.topbar-sub{font-size:12px;color:var(--muted);}
+.topbar-search{
+  flex:1;max-width:360px;
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg);border:1px solid var(--bg2);
+  border-radius:6px;padding:0 12px;height:34px;
+  font-size:13px;color:var(--muted);
+  cursor:text;
+}
+.topbar-search input{
+  border:none;background:transparent;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;color:var(--text);
+  outline:none;flex:1;
+}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
 
-/* LAYOUT */
-.app-body{display:flex;flex:1;overflow:hidden;}
-/* SIDEBAR */
-.sidebar{width:200px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;padding:16px 0;}
-.nav-item{display:flex;align-items:center;gap:12px;padding:11px 18px;cursor:pointer;color:var(--muted);font-size:13px;font-weight:500;letter-spacing:0.02em;transition:all 0.15s;border-left:2px solid transparent;margin-bottom:2px;}
-.nav-item svg{width:16px;height:16px;flex-shrink:0;}
-.nav-item:hover{color:var(--white);background:var(--card);}
-.nav-item.active{color:var(--yellow);border-left-color:var(--yellow);background:var(--ydim);}
-.nav-section{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--border2);padding:16px 18px 8px;margin-top:8px;}
-.sidebar-bottom{margin-top:auto;padding:16px;}
-.logout-btn{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
-.logout-btn:hover{border-color:var(--muted);color:var(--white);}
+/* ROLE SWITCHER */
+.role-switcher{
+  display:flex;align-items:center;gap:4px;
+  background:var(--bg);border:1px solid var(--bg2);
+  border-radius:6px;padding:3px;
+}
+.role-btn{
+  padding:4px 10px;border-radius:4px;
+  font-size:11px;font-weight:500;cursor:pointer;
+  color:var(--muted);transition:all .15s;border:none;background:none;
+}
+.role-btn.active{background:#fff;color:var(--plat);box-shadow:0 1px 3px rgba(0,0,0,.1);}
+
+.ai-btn{
+  display:flex;align-items:center;gap:6px;
+  background:var(--plat);color:#fff;
+  border:none;border-radius:6px;
+  padding:6px 14px;font-size:12px;font-weight:500;
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:background .15s;
+}
+.ai-btn:hover{background:#0830d4;}
 
 /* CONTENT */
-.content{flex:1;overflow-y:auto;padding:24px;}
-.content::-webkit-scrollbar{width:4px;}
-.content::-webkit-scrollbar-track{background:transparent;}
-.content::-webkit-scrollbar-thumb{background:var(--border);}
-.page{display:none;}
-.page.active{display:block;}
-.page-header{margin-bottom:24px;}
-.page-title{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;}
-.page-sub{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:4px;}
+#content{flex:1;overflow-y:auto;padding:24px;}
 
-/* CARDS & GRIDS */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
-.stat-card{background:var(--panel);border:1px solid var(--border);padding:20px;}
-.stat-label2{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
-.stat-val{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;line-height:1;color:var(--white);}
-.stat-val.yellow{color:var(--yellow);}
-.stat-val.green{color:var(--green);}
-.stat-val.red{color:var(--red);}
-.stat-delta{font-size:11px;color:var(--muted);margin-top:4px;}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
-.panel{background:var(--panel);border:1px solid var(--border);padding:20px;margin-bottom:16px;}
-.panel-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
-.panel-title .count{font-family:'DM Mono',monospace;font-size:11px;font-weight:400;color:var(--muted);letter-spacing:0.08em;}
+/* VIEWS */
+.view{display:none;}
+.view.active{display:block;}
 
-/* JOB ITEMS */
-.job-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;}
-.job-item:last-child{border-bottom:none;}
-.job-item:hover{background:var(--card2);margin:0 -20px;padding:14px 20px;}
-.job-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.job-dot.active{background:var(--green);}
-.job-dot.pending{background:var(--yellow);}
-.job-dot.review{background:var(--blue);}
-.job-dot.complete{background:var(--muted);}
-.job-info{flex:1;}
-.job-name{font-size:13px;font-weight:500;margin-bottom:3px;}
-.job-addr{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;}
-.job-badge{font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:2px;font-weight:500;}
-.job-badge.active{background:rgba(52,199,123,0.12);color:var(--green);}
-.job-badge.pending{background:var(--ydim);color:var(--yellow);}
-.job-badge.review{background:rgba(91,159,239,0.12);color:var(--blue);}
-.job-badge.complete{background:rgba(118,123,138,0.15);color:var(--muted);}
+/* ── DASHBOARD ── */
 
-/* ACTIVITY */
-.activity-item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);}
-.activity-item:last-child{border-bottom:none;}
-.activity-icon{width:32px;height:32px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--yellow);}
-.activity-icon svg{width:14px;height:14px;}
-.activity-text{font-size:12.5px;line-height:1.5;flex:1;}
-.activity-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+/* Financial Range Buckets */
+.range-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;margin-bottom:20px;
+}
+.range-card{
+  background:var(--surface);
+  border:1px solid var(--bg2);
+  border-radius:8px;padding:12px 10px;
+  cursor:default;transition:border-color .15s;
+}
+.range-card:hover{border-color:var(--plat);}
+.range-label{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;}
+.range-amount{font-size:15px;font-weight:600;color:var(--text);margin-bottom:2px;font-family:'DM Mono',monospace;}
+.range-count{font-size:11px;color:var(--subtle);}
+.range-bar{height:3px;border-radius:2px;background:var(--bg2);margin-top:8px;}
+.range-bar-fill{height:3px;border-radius:2px;background:var(--plat);}
 
-/* INSPECTIONS */
-.insp-item{padding:16px;background:var(--card);border:1px solid var(--border);margin-bottom:10px;}
-.insp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
-.insp-name{font-size:13px;font-weight:600;}
-.insp-addr{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;}
-.insp-status{font-family:'DM Mono',monospace;font-size:10px;padding:3px 10px;}
-.insp-status.due{background:rgba(239,91,91,0.15);color:var(--red);}
-.insp-status.soon{background:var(--ydim);color:var(--yellow);}
-.insp-status.ok{background:rgba(52,199,123,0.12);color:var(--green);}
-.insp-bar-wrap{background:var(--panel);border-radius:2px;height:4px;margin-bottom:10px;}
-.insp-bar{height:4px;border-radius:2px;}
-.insp-meta{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
-.insp-btn{margin-top:12px;background:var(--yellow);color:var(--black);border:none;padding:8px 16px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;}
-.insp-btn:hover{opacity:0.85;}
-.insp-btn.outline{background:transparent;border:1px solid var(--border);color:var(--muted);}
+/* Company Summary Cards */
+.company-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.co-card{
+  background:var(--surface);
+  border:1px solid var(--bg2);
+  border-radius:10px;overflow:hidden;
+}
+.co-card-header{
+  padding:14px 16px 12px;
+  border-bottom:1px solid var(--bg2);
+  display:flex;align-items:center;gap:10px;
+}
+.co-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.co-name{font-weight:600;font-size:14px;}
+.co-tag{margin-left:auto;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;}
+.co-body{padding:14px 16px;}
+.co-metric{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.co-metric:last-child{margin-bottom:0;}
+.co-metric-label{font-size:12px;color:var(--muted);}
+.co-metric-value{font-size:14px;font-weight:600;font-family:'DM Mono',monospace;}
 
-/* FIELD LOG */
-.log-form{background:var(--panel);border:1px solid var(--border);padding:20px;margin-bottom:20px;}
-.log-form textarea{width:100%;background:var(--card);border:1px solid var(--border);color:var(--white);padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;resize:vertical;min-height:90px;transition:border-color 0.2s;border-radius:0;}
-.log-form textarea:focus{border-color:var(--yellow);}
-.log-form-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;margin-top:10px;align-items:end;}
-.log-form select,
-.log-form input[type=text]{background:var(--card);border:1px solid var(--border);color:var(--white);padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;border-radius:0;-webkit-appearance:none;transition:border-color 0.2s;}
-.log-form select:focus,.log-form input[type=text]:focus{border-color:var(--yellow);}
-.log-submit{background:var(--yellow);color:var(--black);border:none;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:opacity 0.2s;}
-.log-submit:hover{opacity:0.85;}
-.log-entry{background:var(--panel);border:1px solid var(--border);padding:16px;margin-bottom:10px;}
-.log-entry-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.log-entry-job{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;}
-.log-entry-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
-.log-entry-type{font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;background:var(--ydim);color:var(--yellow);margin-bottom:10px;display:inline-block;}
-.log-entry-text{font-size:13px;color:var(--muted);line-height:1.6;}
-.log-entry-crew{margin-top:10px;font-size:11px;color:var(--muted);}
-.log-entry-crew span{color:var(--white);font-weight:500;}
+/* Alert Section */
+.section-header{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:12px;
+}
+.section-title{font-size:13px;font-weight:600;letter-spacing:.02em;}
+.section-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;}
 
-/* AI INBOX */
-.ai-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
-.ai-badge{display:flex;align-items:center;gap:8px;background:var(--ydim);border:1px solid rgba(240,180,41,0.25);padding:6px 14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--yellow);}
-.ai-input-area{background:var(--panel);border:1px solid var(--border);padding:20px;margin-bottom:16px;}
-.ai-input-area label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
-.ai-input-area textarea{width:100%;background:var(--card);border:1px solid var(--border);color:var(--white);padding:14px;font-family:'DM Mono',monospace;font-size:12px;line-height:1.6;outline:none;resize:vertical;min-height:140px;border-radius:0;transition:border-color 0.2s;}
-.ai-input-area textarea:focus{border-color:var(--yellow);}
-.ai-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
-.ai-btn{background:var(--yellow);color:var(--black);border:none;padding:11px 22px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;display:flex;align-items:center;gap:8px;}
-.ai-btn:hover{opacity:0.85;}
-.ai-btn:disabled{opacity:0.5;cursor:not-allowed;}
-.ai-btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;}
-.ai-btn-ghost:hover{border-color:var(--muted);color:var(--white);}
-.ai-result{background:var(--panel);border:1px solid rgba(240,180,41,0.2);padding:20px;margin-bottom:16px;display:none;}
-.ai-result.show{display:block;}
-.ai-result-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);}
-.ai-result-icon{width:32px;height:32px;background:var(--yellow);display:flex;align-items:center;justify-content:center;color:var(--black);}
-.ai-result-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
-.ai-result-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;}
-.ai-result-body{font-size:13.5px;line-height:1.75;color:var(--white);}
-.ai-result-body strong{color:var(--yellow);font-weight:600;}
-.ai-result-body h4{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 8px;color:var(--white);}
-.ai-result-body ul{padding-left:16px;color:var(--muted);}
-.ai-result-body ul li{margin-bottom:4px;}
-.ai-result-actions{display:flex;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
-.ai-thinking{display:none;align-items:center;gap:12px;padding:20px;background:var(--panel);border:1px solid var(--border);margin-bottom:16px;}
-.ai-thinking.show{display:flex;}
-.thinking-dots{display:flex;gap:5px;}
-.thinking-dots span{width:6px;height:6px;background:var(--yellow);border-radius:50%;animation:dot-bounce 1.2s ease-in-out infinite;}
-.thinking-dots span:nth-child(2){animation-delay:0.2s;}
-.thinking-dots span:nth-child(3){animation-delay:0.4s;}
-@keyframes dot-bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}}
-.thinking-text{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.06em;}
-.sample-emails{margin-top:8px;}
-.sample-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
-.sample-pill{display:inline-block;background:var(--card);border:1px solid var(--border);padding:5px 12px;font-size:11px;color:var(--muted);cursor:pointer;margin:0 6px 6px 0;transition:all 0.2s;font-family:'DM Mono',monospace;}
-.sample-pill:hover{border-color:var(--yellow);color:var(--yellow);}
+.alert-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
+.alert-card{
+  background:var(--surface);
+  border:1px solid var(--bg2);
+  border-left:3px solid var(--amber);
+  border-radius:0 8px 8px 0;
+  padding:12px 14px;
+  cursor:pointer;transition:box-shadow .15s;
+}
+.alert-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.alert-card.red{border-left-color:var(--red);}
+.alert-card.green{border-left-color:var(--green);}
+.alert-header{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.alert-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;}
+.alert-tag.amber{background:#FEF3C7;color:#92400E;}
+.alert-tag.red{background:#FEE2E2;color:#991B1B;}
+.alert-title{font-size:13px;font-weight:500;margin-bottom:2px;}
+.alert-sub{font-size:11px;color:var(--muted);}
 
-/* SHAREPOINT SYNC */
-.sync-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
-.sync-row:last-child{border-bottom:none;}
-.sync-info{font-size:12.5px;}
-.sync-meta{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;}
-.sync-badge{font-family:'DM Mono',monospace;font-size:10px;padding:3px 10px;}
-.sync-badge.synced{background:rgba(52,199,123,0.12);color:var(--green);}
-.sync-badge.pending{background:var(--ydim);color:var(--yellow);}
-.sync-badge.error{background:rgba(239,91,91,0.12);color:var(--red);}
+/* Jobs Table */
+.data-table-wrap{background:var(--surface);border:1px solid var(--bg2);border-radius:10px;overflow:hidden;}
+.data-table-toolbar{
+  padding:12px 16px;
+  border-bottom:1px solid var(--bg2);
+  display:flex;align-items:center;gap:10px;
+}
+.filter-btn{
+  padding:5px 12px;border-radius:5px;
+  font-size:12px;font-weight:500;cursor:pointer;
+  border:1px solid var(--bg2);background:#fff;
+  color:var(--muted);transition:all .15s;
+}
+.filter-btn.active-plat{border-color:var(--plat);background:var(--plat-l);color:var(--plat);}
+.filter-btn.active-rock{border-color:var(--rock);background:var(--rock-l);color:var(--rock);}
+.filter-btn.active-fort{border-color:var(--fort);background:var(--fort-l);color:var(--fort);}
+.filter-btn:hover{border-color:var(--subtle);}
+.filter-sep{width:1px;height:20px;background:var(--bg2);}
 
-/* PERMIT BADGE */
-.permit-num{font-family:'DM Mono',monospace;font-size:10px;background:var(--card);border:1px solid var(--border);padding:2px 8px;color:var(--muted);}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead th{
+  padding:8px 12px;
+  text-align:left;
+  font-size:10px;font-weight:600;
+  color:var(--muted);letter-spacing:.06em;text-transform:uppercase;
+  border-bottom:1px solid var(--bg2);
+  white-space:nowrap;
+}
+tbody tr{border-bottom:1px solid var(--bg2);cursor:pointer;transition:background .1s;}
+tbody tr:hover{background:var(--bg);}
+tbody tr:last-child{border-bottom:none;}
+tbody td{padding:10px 12px;vertical-align:middle;}
 
-@media(max-width:900px){
-  .sidebar{display:none;}
-  .stats-row{grid-template-columns:repeat(2,1fr);}
-  .grid-2{grid-template-columns:1fr;}
+.co-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:2px 8px;border-radius:10px;
+  font-size:10px;font-weight:600;white-space:nowrap;
+}
+.co-pill.plat{background:var(--plat-b);color:var(--plat);}
+.co-pill.rock{background:var(--rock-b);color:var(--rock);}
+.co-pill.fort{background:var(--fort-b);color:var(--fort);}
+.co-pill.trans{background:var(--trans-b);color:var(--trans);}
+
+.status-pill{
+  display:inline-flex;align-items:center;
+  padding:2px 8px;border-radius:10px;
+  font-size:10px;font-weight:500;
+}
+.status-pill.installed{background:#DCFCE7;color:#166534;}
+.status-pill.removed{background:#F3F4F6;color:#4B5563;}
+.status-pill.partial{background:#FEF9C3;color:#854D0E;}
+
+.permit-badge{
+  display:inline-block;font-size:10px;font-weight:600;
+  padding:2px 7px;border-radius:4px;white-space:nowrap;
+}
+.permit-badge.ok{background:#DCFCE7;color:#166534;}
+.permit-badge.soon{background:#FEF3C7;color:#92400E;}
+.permit-badge.urgent{background:#FEE2E2;color:#991B1B;}
+.permit-badge.none{background:#F3F4F6;color:#9CA3AF;}
+
+.amount-cell{font-family:'DM Mono',monospace;font-size:12px;}
+.due-amount{color:var(--red);font-weight:600;}
+
+/* ── PERMIT VIEW ── */
+.permit-pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.pipeline-col{background:var(--surface);border:1px solid var(--bg2);border-radius:8px;overflow:hidden;}
+.pipeline-col-header{
+  padding:10px 14px;
+  font-size:11px;font-weight:600;letter-spacing:.04em;
+  border-bottom:1px solid var(--bg2);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.pipeline-item{
+  padding:10px 14px;border-bottom:1px solid var(--bg2);
+  font-size:12px;cursor:pointer;transition:background .1s;
+}
+.pipeline-item:hover{background:var(--bg);}
+.pipeline-item:last-child{border-bottom:none;}
+.pipeline-addr{font-weight:500;margin-bottom:2px;font-size:11px;}
+.pipeline-meta{color:var(--muted);font-size:10px;}
+
+/* ── FINANCIALS VIEW ── */
+.financial-restricted{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:300px;gap:12px;color:var(--muted);text-align:center;
+}
+
+/* ── LIEN VIEW ── */
+.lien-card{
+  background:var(--surface);
+  border:1px solid var(--bg2);
+  border-left:3px solid var(--red);
+  border-radius:0 8px 8px 0;
+  padding:14px 16px;margin-bottom:8px;
+  display:flex;align-items:center;gap:16px;
+  cursor:pointer;transition:box-shadow .15s;
+}
+.lien-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.lien-main{flex:1;}
+.lien-client{font-weight:600;font-size:13px;margin-bottom:2px;}
+.lien-addr{font-size:11px;color:var(--muted);}
+.lien-amount{font-family:'DM Mono',monospace;font-size:16px;font-weight:600;color:var(--red);}
+.lien-status{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-top:4px;display:inline-block;}
+.lien-status.active{background:#FEE2E2;color:#991B1B;}
+.lien-status.filed{background:#FEF3C7;color:#92400E;}
+
+/* ── AI PANEL ── */
+#ai-panel{
+  position:fixed;top:0;right:0;bottom:0;
+  width:380px;
+  background:var(--navy);
+  border-left:1px solid var(--border2);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
+  z-index:100;
+}
+#ai-panel.open{transform:translateX(0);}
+.ai-panel-header{
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.ai-panel-logo{
+  width:28px;height:28px;
+  background:var(--plat);
+  display:flex;align-items:center;justify-content:center;
+  border-radius:6px;
+  font-size:14px;
+}
+.ai-panel-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:700;color:#fff;letter-spacing:.06em;
+}
+.ai-panel-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px;}
+.ai-close{margin-left:auto;cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;transition:color .15s;background:none;border:none;}
+.ai-close:hover{color:#fff;}
+
+.ai-quick{padding:14px 20px;border-bottom:1px solid var(--border);}
+.ai-quick-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
+.ai-quick-btn{
+  display:block;width:100%;text-align:left;
+  background:var(--navy3);border:1px solid var(--border2);
+  border-radius:6px;padding:9px 12px;
+  color:rgba(255,255,255,.75);font-size:12px;
+  cursor:pointer;margin-bottom:6px;
+  font-family:'DM Sans',sans-serif;
+  transition:background .15s,color .15s;
+}
+.ai-quick-btn:hover{background:var(--navy2);color:#fff;}
+.ai-quick-btn:last-child{margin-bottom:0;}
+
+.ai-messages{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;}
+.ai-msg{max-width:90%;}
+.ai-msg.user{align-self:flex-end;}
+.ai-msg.bot{align-self:flex-start;}
+.ai-bubble{
+  padding:10px 14px;border-radius:10px;
+  font-size:13px;line-height:1.55;
+}
+.ai-msg.user .ai-bubble{background:var(--plat);color:#fff;}
+.ai-msg.bot .ai-bubble{background:var(--navy3);color:rgba(255,255,255,.85);border:1px solid var(--border2);}
+.ai-typing{
+  display:flex;align-items:center;gap:4px;padding:10px 14px;
+  background:var(--navy3);border:1px solid var(--border2);
+  border-radius:10px;width:fit-content;
+}
+.ai-typing span{
+  width:5px;height:5px;background:rgba(255,255,255,.4);
+  border-radius:50%;animation:blink 1.2s infinite;
+}
+.ai-typing span:nth-child(2){animation-delay:.2s;}
+.ai-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+
+.ai-input-wrap{
+  padding:12px 20px;border-top:1px solid var(--border);
+  display:flex;gap:8px;align-items:flex-end;
+}
+.ai-input{
+  flex:1;background:var(--navy3);border:1px solid var(--border2);
+  border-radius:8px;padding:10px 12px;
+  color:#fff;font-size:13px;font-family:'DM Sans',sans-serif;
+  outline:none;resize:none;max-height:120px;
+  transition:border-color .15s;
+}
+.ai-input::placeholder{color:rgba(255,255,255,.3);}
+.ai-input:focus{border-color:var(--plat);}
+.ai-send{
+  width:34px;height:34px;background:var(--plat);
+  border:none;border-radius:6px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:14px;transition:background .15s;flex-shrink:0;
+}
+.ai-send:hover{background:#0830d4;}
+
+/* ── MISC ── */
+.stat-row{display:flex;gap:12px;margin-bottom:20px;}
+.stat-card{
+  flex:1;background:var(--surface);border:1px solid var(--bg2);
+  border-radius:8px;padding:14px 16px;
+}
+.stat-label{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.stat-value{font-size:22px;font-weight:600;font-family:'DM Mono',monospace;color:var(--text);}
+.stat-delta{font-size:11px;color:var(--green);margin-top:2px;}
+
+.locked-overlay{
+  display:flex;align-items:center;gap:6px;
+  color:var(--muted);font-size:13px;
+  background:var(--bg);border:1px dashed var(--bg2);
+  border-radius:8px;padding:20px;
+  justify-content:center;
 }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-bg"></div>
-  <div class="login-glow"></div>
-  <div class="login-box">
-    <div class="login-logo">PLATINUM<span>.</span>FIELD CMD</div>
-    <div class="login-sub">Project & Field Management Portal</div>
-    <div class="login-field"><label>Email</label><input type="email" id="login-email" value="admin@platinumny.com" placeholder="admin@platinumny.com"></div>
-    <div class="login-field"><label>Password</label><input type="password" id="login-pass" value="••••••••" placeholder="Password"></div>
-    <button class="login-btn" onclick="doLogin()">Sign In →</button>
-    <div class="login-note">DEMO MODE · Kane PC Technology Partners</div>
+<!-- ── SIDEBAR ── -->
+<div id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-mark">P</div>
+    <div class="sb-logo-text">
+      PLATINUM<span class="sb-logo-sub">FIELD OPS</span>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Operations</div>
+    <div class="nav-item active" onclick="nav('dashboard',this)">
+      <span class="nav-icon">⊞</span>
+      <span class="nav-label">Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="nav('jobs',this)">
+      <span class="nav-icon">⚒</span>
+      <span class="nav-label">Jobs</span>
+    </div>
+    <div class="nav-item" onclick="nav('permits',this)">
+      <span class="nav-icon">📋</span>
+      <span class="nav-label">Permit Hub</span>
+      <span class="nav-badge">8</span>
+    </div>
+
+    <div class="sb-section">Finance</div>
+    <div class="nav-item" id="nav-financials" onclick="nav('financials',this)">
+      <span class="nav-icon">$</span>
+      <span class="nav-label">Financials</span>
+    </div>
+    <div class="nav-item" onclick="nav('liens',this)">
+      <span class="nav-icon">⚖</span>
+      <span class="nav-label">Liens</span>
+      <span class="nav-badge" style="background:var(--red)">14</span>
+    </div>
+
+    <div class="sb-section">Records</div>
+    <div class="nav-item" onclick="nav('archive',this)">
+      <span class="nav-icon">🗄</span>
+      <span class="nav-label">Archive</span>
+    </div>
+  </nav>
+  <div class="sb-collapse" onclick="toggleSidebar()">
+    <span class="sb-collapse-icon">◂</span>
+    <span>Collapse</span>
   </div>
 </div>
 
-<!-- APP -->
-<div id="app">
+<!-- ── MAIN ── -->
+<div id="main">
+
+  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="topbar-logo">PLATINUMSERVICES<span>.</span>NYC</div>
-    <div class="topbar-divider"></div>
-    <div class="topbar-badge">FIELD COMMAND LIVE</div>
+    <div>
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-sub" id="topbar-sub">Platinum Services · Active Operations</div>
+    </div>
+    <div class="topbar-search">
+      <span style="color:var(--subtle);font-size:13px;">⌕</span>
+      <input placeholder="Search jobs, addresses, permits..." onkeydown="if(event.key==='Enter')searchJobs(this.value)" />
+    </div>
     <div class="topbar-right">
-      <button class="notif-btn" onclick="alert('3 notifications:\n• 57th St inspection due in 3 days\n• New bid request from Empire GC\n• DOB permit approved: 1421 Ocean Ave')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 0 0-4 4v2L2 11h12l-2-3V6a4 4 0 0 0-4-4Z"/><path d="M6.5 13a1.5 1.5 0 0 0 3 0"/></svg>
-        <div class="notif-dot"></div>
-      </button>
-      <div class="topbar-user">
-        <div class="user-avatar">PS</div>
-        <div><div class="user-name">Platinum Services</div><div class="user-role">ADMIN PORTAL</div></div>
+      <div class="role-switcher">
+        <button class="role-btn active" onclick="setRole('admin',this)">Admin</button>
+        <button class="role-btn" onclick="setRole('pm',this)">PM</button>
+        <button class="role-btn" onclick="setRole('accounting',this)">Accounting</button>
       </div>
+      <button class="ai-btn" onclick="openNewJob()" style="background:var(--surface);color:var(--plat);border:1px solid var(--plat);">
+        + New Job
+      </button>
+      <button class="ai-btn" onclick="toggleAI()">
+        ✦ Ask AI
+      </button>
     </div>
   </div>
 
-  <div class="app-body">
-    <div class="sidebar">
-      <div class="nav-section">Main</div>
-      <div class="nav-item active" onclick="showPage('dashboard',this)">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
-        Dashboard
+  <!-- CONTENT -->
+  <div id="content">
+
+    <!-- ── DASHBOARD VIEW ── -->
+    <div class="view active" id="view-dashboard">
+
+      <!-- Financial Ranges -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <div class="section-title" style="font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em;">RECEIVABLES BY JOB SIZE</div>
       </div>
-      <div class="nav-item" onclick="showPage('jobs',this)">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="11" rx="1"/><path d="M5 3V2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><line x1="5" y1="7" x2="11" y2="7"/><line x1="5" y1="10" x2="9" y2="10"/></svg>
-        Active Jobs
+      <div class="range-grid">
+        <div class="range-card">
+          <div class="range-label">&lt; $10K</div>
+          <div class="range-amount">$284K</div>
+          <div class="range-count">62 jobs</div>
+          <div class="range-bar"><div class="range-bar-fill" style="width:22%"></div></div>
+        </div>
+        <div class="range-card">
+          <div class="range-label">$10K–$25K</div>
+          <div class="range-amount">$412K</div>
+          <div class="range-count">28 jobs</div>
+          <div class="range-bar"><div class="range-bar-fill" style="width:32%"></div></div>
+        </div>
+        <div class="range-card">
+          <div class="range-label">$25K–$50K</div>
+          <div class="range-amount">$698K</div>
+          <div class="range-count">21 jobs</div>
+          <div class="range-bar"><div class="range-bar-fill" style="width:55%"></div></div>
+        </div>
+        <div class="range-card">
+          <div class="range-label">$50K–$100K</div>
+          <div class="range-amount">$934K</div>
+          <div class="range-count">14 jobs</div>
+          <div class="range-bar"><div class="range-bar-fill" style="width:72%"></div></div>
+        </div>
+        <div class="range-card" style="border-color:var(--plat)">
+          <div class="range-label">$100K–$200K</div>
+          <div class="range-amount" style="color:var(--plat)">$1.24M</div>
+          <div class="range-count">9 jobs</div>
+          <div class="range-bar"><div class="range-bar-fill" style="width:96%"></div></div>
+        </div>
+        <div class="range-card">
+          <div class="range-label">$200K–$500K</div>
+          <div class="range-amount">$860K</div>
+          <div class="range-count">4 jobs</div>
+          <div class="range-bar"><div class="range-bar-fill" style="width:66%"></div></div>
+        </div>
+        <div class="range-card">
+          <div class="range-label">$500K+</div>
+          <div class="range-amount">$622K</div>
+          <div class="range-count">2 jobs</div>
+          <div class="range-bar"><div class="range-bar-fill" style="width:48%"></div></div>
+        </div>
       </div>
-      <div class="nav-item" onclick="showPage('fieldlog',this)">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><line x1="8" y1="8" x2="11" y2="10"/></svg>
-        Field Log
+
+      <!-- Stat Row -->
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">Active Jobs</div>
+          <div class="stat-value">448</div>
+          <div class="stat-delta">↑ 12 from last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Receivable</div>
+          <div class="stat-value">$5.05M</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Across all companies</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Monthly Rental Income</div>
+          <div class="stat-value">$183K</div>
+          <div class="stat-delta">Installed jobs only</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Permits Expiring (90d)</div>
+          <div class="stat-value" style="color:var(--red)">8</div>
+          <div style="font-size:11px;color:var(--red);margin-top:2px;">⚠ Requires attention</div>
+        </div>
       </div>
-      <div class="nav-item" onclick="showPage('inspections',this)">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7l2 2 4-4"/><rect x="2" y="2" width="12" height="12" rx="1"/></svg>
-        Inspections
+
+      <!-- Company Cards -->
+      <div class="section-header">
+        <div class="section-title">BY COMPANY</div>
       </div>
-      <div class="nav-section">Intelligence</div>
-      <div class="nav-item" onclick="showPage('aiinbox',this)">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="1"/><path d="M1 5l7 5 7-5"/></svg>
-        AI Inbox
+      <div class="company-grid">
+        <div class="co-card" style="border-top:3px solid var(--plat)">
+          <div class="co-card-header">
+            <div class="co-dot" style="background:var(--plat)"></div>
+            <div class="co-name">PLATINUM</div>
+            <div class="co-tag" style="background:var(--plat-l);color:var(--plat)">Primary</div>
+          </div>
+          <div class="co-body">
+            <div class="co-metric">
+              <span class="co-metric-label">Receivable</span>
+              <span class="co-metric-value" style="color:var(--plat)">$2,841,200</span>
+            </div>
+            <div class="co-metric">
+              <span class="co-metric-label">Active Jobs</span>
+              <span class="co-metric-value">284</span>
+            </div>
+            <div class="co-metric">
+              <span class="co-metric-label">Monthly Rent</span>
+              <span class="co-metric-value">$112,400</span>
+            </div>
+            <div class="co-metric">
+              <span class="co-metric-label">Permits Expiring</span>
+              <span class="co-metric-value" style="color:var(--amber)">5</span>
+            </div>
+          </div>
+        </div>
+        <div class="co-card" style="border-top:3px solid var(--rock)">
+          <div class="co-card-header">
+            <div class="co-dot" style="background:var(--rock)"></div>
+            <div class="co-name">Rock</div>
+            <div class="co-tag" style="background:var(--rock-l);color:var(--rock)">Legacy</div>
+          </div>
+          <div class="co-body">
+            <div class="co-metric">
+              <span class="co-metric-label">Receivable</span>
+              <span class="co-metric-value" style="color:var(--rock)">$1,623,800</span>
+            </div>
+            <div class="co-metric">
+              <span class="co-metric-label">Active Jobs</span>
+              <span class="co-metric-value">131</span>
+            </div>
+            <div class="co-metric">
+              <span class="co-metric-label">Monthly Rent</span>
+              <span class="co-metric-value">$54,200</span>
+            </div>
+            <div class="co-metric">
+              <span class="co-metric-label">Permits Expiring</span>
+              <span class="co-metric-value" style="color:var(--red)">3</span>
+            </div>
+          </div>
+        </div>
+        <div class="co-card" style="border-top:3px solid var(--fort)">
+          <div class="co-card-header">
+            <div class="co-dot" style="background:var(--fort)"></div>
+            <div class="co-name">FORT</div>
+            <div class="co-tag" style="background:var(--fort-l);color:var(--fort)">Active</div>
+          </div>
+          <div class="co-body">
+            <div class="co-metric">
+              <span class="co-metric-label">Receivable</span>
+              <span class="co-metric-value" style="color:var(--fort)">$588,400</span>
+            </div>
+            <div class="co-metric">
+              <span class="co-metric-label">Active Jobs</span>
+              <span class="co-metric-value">33</span>
+            </div>
+            <div class="co-metric">
+              <span class="co-metric-label">Monthly Rent</span>
+              <span class="co-metric-value">$16,800</span>
+            </div>
+            <div class="co-metric">
+              <span class="co-metric-label">Permits Expiring</span>
+              <span class="co-metric-value">0</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="nav-item" onclick="showPage('sharepoint',this)">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="1" width="10" height="14" rx="1"/><line x1="6" y1="5" x2="10" y2="5"/><line x1="6" y1="8" x2="10" y2="8"/><line x1="6" y1="11" x2="8" y2="11"/></svg>
-        Documents
+
+      <!-- Alerts -->
+      <div class="section-header">
+        <div class="section-title">ACTIVE ALERTS</div>
+        <div class="section-badge" style="background:#FEE2E2;color:#991B1B">8 Permits · 3 Financial</div>
       </div>
-      <div class="sidebar-bottom">
-        <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+      <div class="alert-grid">
+        <div class="alert-card" onclick="nav('permits',document.querySelector('[onclick*=permits]'))">
+          <div class="alert-header">
+            <div class="alert-tag amber">⏰ 14 DAYS</div>
+            <div class="co-pill rock" style="font-size:10px">Rock</div>
+          </div>
+          <div class="alert-title">202 East 29th St — Pipe Scaffold</div>
+          <div class="alert-sub">Permit M00206364 expires Apr 28, 2026 · $105K receivable</div>
+        </div>
+        <div class="alert-card red" onclick="nav('permits',document.querySelector('[onclick*=permits]'))">
+          <div class="alert-header">
+            <div class="alert-tag red">🚨 7 DAYS</div>
+            <div class="co-pill plat" style="font-size:10px">PLATINUM</div>
+          </div>
+          <div class="alert-title">180 Varick St — Misc Electrical</div>
+          <div class="alert-sub">Permit M00891173 expires Apr 21, 2026 · Renewal needed</div>
+        </div>
+        <div class="alert-card" onclick="nav('permits',document.querySelector('[onclick*=permits]'))">
+          <div class="alert-header">
+            <div class="alert-tag amber">⏰ 47 DAYS</div>
+            <div class="co-pill plat" style="font-size:10px">PLATINUM</div>
+          </div>
+          <div class="alert-title">445 Park Ave — Sidewalk Shed</div>
+          <div class="alert-sub">Permit M00441182 expires May 31, 2026 · Inspection current</div>
+        </div>
+        <div class="alert-card red" onclick="nav('liens',document.querySelector('[onclick*=liens]'))">
+          <div class="alert-header">
+            <div class="alert-tag red">⚖ LIEN DUE</div>
+            <div class="co-pill rock" style="font-size:10px">Rock</div>
+          </div>
+          <div class="alert-title">AKI Development — 30-11 12th St Qns</div>
+          <div class="alert-sub">Lien amount $63,014 · Filed — monitor for response</div>
+        </div>
       </div>
     </div>
 
-    <div class="content">
+    <!-- ── JOBS VIEW ── -->
+    <div class="view" id="view-jobs">
+      <div class="data-table-wrap">
+        <div class="data-table-toolbar">
+          <button class="filter-btn active-plat" onclick="filterCo('all',this)" id="filter-all" style="background:var(--navy);color:#fff;border-color:var(--navy)">All</button>
+          <button class="filter-btn" onclick="filterCo('PLATINUM',this)">● PLATINUM</button>
+          <button class="filter-btn" onclick="filterCo('Rock',this)">● Rock</button>
+          <button class="filter-btn" onclick="filterCo('FORT',this)">● FORT</button>
+          <button class="filter-btn" onclick="filterCo('Transferred',this)">● Transferred</button>
+          <div class="filter-sep"></div>
+          <select onchange="filterStatus(this.value)" style="font-family:'DM Sans',sans-serif;font-size:12px;border:1px solid var(--bg2);border-radius:5px;padding:4px 8px;background:#fff;color:var(--text);">
+            <option value="">All Statuses</option>
+            <option>Installed</option>
+            <option>Removed</option>
+            <option>Partial Removed</option>
+            <option>Partial Installed</option>
+          </select>
+          <select style="font-family:'DM Sans',sans-serif;font-size:12px;border:1px solid var(--bg2);border-radius:5px;padding:4px 8px;background:#fff;color:var(--text);">
+            <option value="">All Work Types</option>
+            <option>Sidewalk Shed</option>
+            <option>Pipe Scaffold</option>
+            <option>Roof Protection</option>
+            <option>Fence</option>
+            <option>Hoist</option>
+            <option>OHP</option>
+            <option>Barrier</option>
+            <option>Needle Beam</option>
+            <option>Horizontal Netting</option>
+            <option>Misc.</option>
+          </select>
+          <div style="margin-left:auto;font-size:12px;color:var(--muted)" id="job-count">448 jobs</div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table id="jobs-table">
+            <thead>
+              <tr>
+                <th>Job #</th>
+                <th>Company</th>
+                <th>Client</th>
+                <th>Address</th>
+                <th>Type of Work</th>
+                <th>Status</th>
+                <th>Permit No.</th>
+                <th>Permit Expiry</th>
+                <th>Due Receivable</th>
+              </tr>
+            </thead>
+            <tbody id="jobs-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
-      <!-- DASHBOARD -->
-      <div class="page active" id="page-dashboard">
-        <div class="page-header">
-          <div class="page-title">Dashboard</div>
-          <div class="page-sub">Friday, April 10, 2026 · Long Island City HQ</div>
-        </div>
-        <div class="stats-row">
-          <div class="stat-card"><div class="stat-label2">Active Jobs</div><div class="stat-val yellow">14</div><div class="stat-delta">↑ 2 this week</div></div>
-          <div class="stat-card"><div class="stat-label2">Inspections Due</div><div class="stat-val red">3</div><div class="stat-delta">Within 7 days</div></div>
-          <div class="stat-card"><div class="stat-label2">Field Logs Today</div><div class="stat-val green">8</div><div class="stat-delta">Last: 11:42 AM</div></div>
-          <div class="stat-card"><div class="stat-label2">New Bid Requests</div><div class="stat-val yellow">5</div><div class="stat-delta">Via AI Inbox</div></div>
-        </div>
-        <div class="grid-2">
-          <div class="panel">
-            <div class="panel-title">Priority Jobs <span class="count">14 ACTIVE</span></div>
-            <div class="job-item"><div class="job-dot active"></div><div class="job-info"><div class="job-name">57 W 57th St — Pipe Scaffold</div><div class="job-addr">Manhattan · DOB #M2024-01847 <span class="permit-num">M2024-01847</span></div></div><div class="job-badge active">Active</div></div>
-            <div class="job-item"><div class="job-dot pending"></div><div class="job-info"><div class="job-name">1421 Ocean Ave — Sidewalk Shed</div><div class="job-addr">Brooklyn · DOB #BK2024-03291</div></div><div class="job-badge pending">Permit Pend.</div></div>
-            <div class="job-item"><div class="job-dot active"></div><div class="job-info"><div class="job-name">34-22 Astoria Blvd — Shoring</div><div class="job-addr">Queens · DOB #Q2024-00884</div></div><div class="job-badge active">Active</div></div>
-            <div class="job-item"><div class="job-dot review"></div><div class="job-info"><div class="job-name">170 W 193rd St — System Scaffold</div><div class="job-addr">Bronx · DOB #BX2024-02156</div></div><div class="job-badge review">In Review</div></div>
-            <div class="job-item"><div class="job-dot complete"></div><div class="job-info"><div class="job-name">84 Bay St — Sidewalk Shed</div><div class="job-addr">Staten Island · DOB #SI2024-00412</div></div><div class="job-badge complete">Complete</div></div>
+    <!-- ── PERMITS VIEW ── -->
+    <div class="view" id="view-permits">
+      <div class="section-header" style="margin-bottom:16px">
+        <div class="section-title">PERMIT PIPELINE</div>
+        <div class="section-badge" style="background:#FEF3C7;color:#92400E">Drawings → Applied → Approved → Active</div>
+      </div>
+      <div class="permit-pipeline">
+        <div class="pipeline-col">
+          <div class="pipeline-col-header">
+            <span>📐 Drawings Pending</span>
+            <span class="section-badge" style="background:var(--bg2);color:var(--muted)">6</span>
           </div>
-          <div class="panel">
-            <div class="panel-title">Recent Activity <span class="count">TODAY</span></div>
-            <div class="activity-item">
-              <div class="activity-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1v6l3 2"/><circle cx="7" cy="7" r="6"/></svg></div>
-              <div><div class="activity-text"><strong>Marco R.</strong> logged site entry — 57 W 57th St, 3rd floor scaffold complete</div><div class="activity-time">11:42 AM</div></div>
+          <div class="pipeline-item"><div class="pipeline-addr">63 Dean St, Brooklyn</div><div class="pipeline-meta co-pill fort" style="margin-top:4px">FORT</div></div>
+          <div class="pipeline-item"><div class="pipeline-addr">88 Leonard St, Manhattan</div><div class="pipeline-meta co-pill plat" style="margin-top:4px">PLATINUM</div></div>
+          <div class="pipeline-item"><div class="pipeline-addr">30-11 12th St, Queens</div><div class="pipeline-meta co-pill rock" style="margin-top:4px">Rock</div></div>
+        </div>
+        <div class="pipeline-col">
+          <div class="pipeline-col-header">
+            <span>📬 Applied / Waiting</span>
+            <span class="section-badge" style="background:var(--bg2);color:var(--muted)">11</span>
+          </div>
+          <div class="pipeline-item"><div class="pipeline-addr">445 Park Ave, Manhattan</div><div style="display:flex;gap:6px;margin-top:4px"><div class="pipeline-meta co-pill plat">PLATINUM</div><div class="pipeline-meta" style="font-size:10px;color:var(--muted)">22 days</div></div></div>
+          <div class="pipeline-item"><div class="pipeline-addr">220 W 148th St, Manhattan</div><div style="display:flex;gap:6px;margin-top:4px"><div class="pipeline-meta co-pill rock">Rock</div><div class="pipeline-meta" style="font-size:10px;color:var(--muted)">8 days</div></div></div>
+          <div class="pipeline-item"><div class="pipeline-addr">38 W 21st St, Manhattan</div><div style="display:flex;gap:6px;margin-top:4px"><div class="pipeline-meta co-pill plat">PLATINUM</div><div class="pipeline-meta" style="font-size:10px;color:var(--muted)">41 days</div></div></div>
+        </div>
+        <div class="pipeline-col">
+          <div class="pipeline-col-header">
+            <span>✅ Approved</span>
+            <span class="section-badge" style="background:#DCFCE7;color:#166534">9</span>
+          </div>
+          <div class="pipeline-item"><div class="pipeline-addr">180 Varick St, Manhattan</div><div class="pipeline-meta co-pill plat" style="margin-top:4px">PLATINUM</div></div>
+          <div class="pipeline-item"><div class="pipeline-addr">205 W 88th St, Manhattan</div><div class="pipeline-meta co-pill plat" style="margin-top:4px">PLATINUM</div></div>
+          <div class="pipeline-item"><div class="pipeline-addr">120 E 87th St, Manhattan</div><div class="pipeline-meta co-pill rock" style="margin-top:4px">Rock</div></div>
+        </div>
+        <div class="pipeline-col">
+          <div class="pipeline-col-header">
+            <span style="color:var(--red)">🚨 Expiring Soon</span>
+            <span class="section-badge" style="background:#FEE2E2;color:#991B1B">8</span>
+          </div>
+          <div class="pipeline-item" style="border-left:2px solid var(--red)">
+            <div class="pipeline-addr">180 Varick St</div>
+            <div style="margin-top:4px;display:flex;gap:6px;align-items:center">
+              <div class="permit-badge urgent">7 days</div>
+              <div class="co-pill plat" style="font-size:10px">PLATINUM</div>
             </div>
-            <div class="activity-item">
-              <div class="activity-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="12" height="12" rx="1"/><path d="M4 7l2 2 4-4"/></svg></div>
-              <div><div class="activity-text">DOB permit approved — <strong>1421 Ocean Ave</strong> sidewalk shed</div><div class="activity-time">10:15 AM</div></div>
+          </div>
+          <div class="pipeline-item" style="border-left:2px solid var(--amber)">
+            <div class="pipeline-addr">202 E 29th St</div>
+            <div style="margin-top:4px;display:flex;gap:6px;align-items:center">
+              <div class="permit-badge soon">14 days</div>
+              <div class="co-pill rock" style="font-size:10px">Rock</div>
             </div>
-            <div class="activity-item">
-              <div class="activity-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 3h12M4 1h6M3 7h8M4 11l2-4 2 4 2-4 2 4"/></svg></div>
-              <div><div class="activity-text"><strong>AI Inbox</strong> flagged new bid from Empire State GC — 1100 Ave of Americas</div><div class="activity-time">9:07 AM</div></div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="6"/><path d="M7 4v4M7 10v.5"/></svg></div>
-              <div><div class="activity-text">Inspection reminder — <strong>34-22 Astoria Blvd</strong> due in 4 days</div><div class="activity-time">8:00 AM</div></div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="12" height="8" rx="1"/><path d="M1 5l6 4 6-4"/></svg></div>
-              <div><div class="activity-text"><strong>AI Inbox</strong> processed 3 new emails, 1 qualified lead extracted</div><div class="activity-time">Yesterday 5:30 PM</div></div>
+          </div>
+          <div class="pipeline-item" style="border-left:2px solid var(--amber)">
+            <div class="pipeline-addr">445 Park Ave</div>
+            <div style="margin-top:4px;display:flex;gap:6px;align-items:center">
+              <div class="permit-badge soon">47 days</div>
+              <div class="co-pill plat" style="font-size:10px">PLATINUM</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- JOBS -->
-      <div class="page" id="page-jobs">
-        <div class="page-header">
-          <div class="page-title">Active Jobs</div>
-          <div class="page-sub">All 14 active projects across NYC · Updated in real time</div>
-        </div>
-        <div class="panel">
-          <div class="panel-title">All Jobs <span class="count">14 ACTIVE · 2 PENDING · 3 COMPLETE</span></div>
-          <div class="job-item"><div class="job-dot active"></div><div class="job-info"><div class="job-name">57 W 57th St — Pipe Scaffold</div><div class="job-addr">Manhattan · GC: Turner Construction · <span class="permit-num">M2024-01847</span></div></div><div class="job-badge active">Active</div></div>
-          <div class="job-item"><div class="job-dot active"></div><div class="job-info"><div class="job-name">200 Water St — Sidewalk Shed</div><div class="job-addr">Manhattan · GC: Skanska · <span class="permit-num">M2024-02003</span></div></div><div class="job-badge active">Active</div></div>
-          <div class="job-item"><div class="job-dot active"></div><div class="job-info"><div class="job-name">34-22 Astoria Blvd — Shoring</div><div class="job-addr">Queens · GC: Bovis · <span class="permit-num">Q2024-00884</span></div></div><div class="job-badge active">Active</div></div>
-          <div class="job-item"><div class="job-dot active"></div><div class="job-info"><div class="job-name">88 Court St — System Scaffolding</div><div class="job-addr">Brooklyn · GC: Plaza Construction · <span class="permit-num">BK2024-02901</span></div></div><div class="job-badge active">Active</div></div>
-          <div class="job-item"><div class="job-dot active"></div><div class="job-info"><div class="job-name">1800 Grand Concourse — Needle Beams</div><div class="job-addr">Bronx · GC: Sciame · <span class="permit-num">BX2024-01122</span></div></div><div class="job-badge active">Active</div></div>
-          <div class="job-item"><div class="job-dot active"></div><div class="job-info"><div class="job-name">4201 Shore Pkwy — Debris Chute</div><div class="job-addr">Brooklyn · GC: JT Magen · <span class="permit-num">BK2024-03100</span></div></div><div class="job-badge active">Active</div></div>
-          <div class="job-item"><div class="job-dot active"></div><div class="job-info"><div class="job-name">110-20 Atlantic Ave — Safety Nets</div><div class="job-addr">Queens · GC: Suffolk Construction · <span class="permit-num">Q2024-01345</span></div></div><div class="job-badge active">Active</div></div>
-          <div class="job-item"><div class="job-dot pending"></div><div class="job-info"><div class="job-name">1421 Ocean Ave — Sidewalk Shed</div><div class="job-addr">Brooklyn · GC: TBD · <span class="permit-num">BK2024-03291</span></div></div><div class="job-badge pending">Permit Pending</div></div>
-          <div class="job-item"><div class="job-dot review"></div><div class="job-info"><div class="job-name">170 W 193rd St — System Scaffold</div><div class="job-addr">Bronx · GC: Lendlease · <span class="permit-num">BX2024-02156</span></div></div><div class="job-badge review">In Review</div></div>
-          <div class="job-item"><div class="job-dot complete"></div><div class="job-info"><div class="job-name">84 Bay St — Sidewalk Shed</div><div class="job-addr">Staten Island · GC: Cauldwell Wingate · <span class="permit-num">SI2024-00412</span></div></div><div class="job-badge complete">Complete</div></div>
+      <!-- Expiry Table -->
+      <div class="section-header">
+        <div class="section-title">ALL ACTIVE PERMITS</div>
+      </div>
+      <div class="data-table-wrap">
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Job Address</th>
+                <th>Company</th>
+                <th>Permit No.</th>
+                <th>Issue Date</th>
+                <th>Expiry Date</th>
+                <th>Inspection Letter</th>
+                <th>Days Left</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>180 Varick Street</td><td><div class="co-pill plat">PLATINUM</div></td><td style="font-family:'DM Mono',monospace;font-size:11px">M00891173-I1-EL</td><td>Jun 15, 2023</td><td style="color:var(--red);font-weight:600">Apr 21, 2026</td><td>Mar 25, 2026</td><td><div class="permit-badge urgent">7 days</div></td><td><div class="status-pill installed">Active</div></td></tr>
+              <tr><td>202 East 29th Street</td><td><div class="co-pill rock">Rock</div></td><td style="font-family:'DM Mono',monospace;font-size:11px">M00206364</td><td>Sep 30, 2020</td><td style="color:var(--amber);font-weight:600">Apr 28, 2026</td><td>Dec 9, 2021</td><td><div class="permit-badge soon">14 days</div></td><td><div class="status-pill installed">Active</div></td></tr>
+              <tr><td>180 Varick Street</td><td><div class="co-pill plat">PLATINUM</div></td><td style="font-family:'DM Mono',monospace;font-size:11px">M00997942-I1-SH</td><td>Jan 20, 2026</td><td>Sep 29, 2026</td><td>Mar 25, 2026</td><td><div class="permit-badge ok">169 days</div></td><td><div class="status-pill installed">Active</div></td></tr>
+              <tr><td>445 Park Avenue</td><td><div class="co-pill plat">PLATINUM</div></td><td style="font-family:'DM Mono',monospace;font-size:11px">M00441182-I1-SH</td><td>Feb 1, 2026</td><td>May 31, 2026</td><td>Jan 28, 2026</td><td><div class="permit-badge soon">47 days</div></td><td><div class="status-pill installed">Active</div></td></tr>
+              <tr><td>601 W 160th Street</td><td><div class="co-pill rock">Rock</div></td><td style="font-family:'DM Mono',monospace;font-size:11px">Not issued yet</td><td>—</td><td>—</td><td>—</td><td><div class="permit-badge none">No permit</div></td><td><div class="status-pill installed">Active</div></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
+    </div>
 
-      <!-- FIELD LOG -->
-      <div class="page" id="page-fieldlog">
-        <div class="page-header">
-          <div class="page-title">Field Log</div>
-          <div class="page-sub">Real-time field documentation · Syncs to SharePoint automatically</div>
-        </div>
-        <div class="log-form">
-          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">New Field Entry</div>
-          <textarea id="log-text" placeholder="Describe work completed, site conditions, crew activity, safety observations, material deliveries..."></textarea>
-          <div class="log-form-row">
-            <select id="log-job">
-              <option>57 W 57th St — Pipe Scaffold</option>
-              <option>34-22 Astoria Blvd — Shoring</option>
-              <option>88 Court St — System Scaffold</option>
-              <option>1800 Grand Concourse</option>
-              <option>200 Water St</option>
-            </select>
-            <select id="log-type">
-              <option>Progress Update</option>
-              <option>Safety Observation</option>
-              <option>Material Delivery</option>
-              <option>Inspection Note</option>
-              <option>Issue / Delay</option>
-              <option>Crew Sign-In</option>
-            </select>
-            <input type="text" id="log-crew" placeholder="Crew / Supervisor name">
-            <button class="log-submit" onclick="submitLog()">Log Entry →</button>
-          </div>
-        </div>
-        <div id="log-entries">
-          <div class="log-entry">
-            <div class="log-entry-header"><div class="log-entry-job">57 W 57th St</div><div class="log-entry-time">Today · 11:42 AM · Marco Ruiz</div></div>
-            <div class="log-entry-type">Progress Update</div>
-            <div class="log-entry-text">3rd floor scaffold system fully erected on south façade. All guardrails and mid-rails installed per plan. Crew of 6 on site. Ready for GC walkthrough tomorrow AM. No safety issues to report. Materials staged on 2nd floor landing.</div>
-          </div>
-          <div class="log-entry">
-            <div class="log-entry-header"><div class="log-entry-job">34-22 Astoria Blvd</div><div class="log-entry-time">Today · 9:18 AM · Tony Calabrese</div></div>
-            <div class="log-entry-type">Safety Observation</div>
-            <div class="log-entry-text">Shoring system inspected prior to work commencement. All shores plumb and tight. Adjacent excavation showed no movement from last measurement. PPE compliance 100%. Crew signed safety attestation for the day.</div>
-          </div>
-          <div class="log-entry">
-            <div class="log-entry-header"><div class="log-entry-job">88 Court St</div><div class="log-entry-time">Yesterday · 3:45 PM · Damian Wells</div></div>
-            <div class="log-entry-type">Material Delivery</div>
-            <div class="log-entry-text">Received 40 system scaffold frames and 120 cross braces from yard. All counts verified. 10 damaged planks returned to yard driver — documented on delivery receipt #DR2024-0487. Storage area is clear of pedestrian zone.</div>
-          </div>
-        </div>
+    <!-- ── FINANCIALS VIEW ── -->
+    <div class="view" id="view-financials">
+      <div id="financials-content">
+        <!-- Filled by role -->
+      </div>
+    </div>
+
+    <!-- ── LIENS VIEW ── -->
+    <div class="view" id="view-liens">
+      <div class="section-header">
+        <div class="section-title">ACTIVE LIENS</div>
+        <div class="section-badge" style="background:#FEE2E2;color:#991B1B">14 Open · $684K Total</div>
       </div>
 
-      <!-- INSPECTIONS -->
-      <div class="page" id="page-inspections">
-        <div class="page-header">
-          <div class="page-title">Inspections</div>
-          <div class="page-sub">NYC requires scaffold inspection every 30 days — all active jobs tracked here</div>
+      <div class="lien-card">
+        <div class="lien-main">
+          <div class="lien-client">AKI Development</div>
+          <div class="lien-addr">30-11 12th Street, Queens · <span style="color:var(--rock);font-weight:500">Rock</span></div>
+          <div class="lien-status active">Lien Filed</div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
-          <div class="stat-card"><div class="stat-label2">Due This Week</div><div class="stat-val red">3</div></div>
-          <div class="stat-card"><div class="stat-label2">Completed This Month</div><div class="stat-val green">11</div></div>
-        </div>
-
-        <div class="panel-title" style="margin-bottom:14px;">Upcoming Inspections</div>
-
-        <div class="insp-item">
-          <div class="insp-header">
-            <div><div class="insp-name">57 W 57th St — Pipe Scaffold</div><div class="insp-addr">Manhattan · <span class="permit-num">M2024-01847</span></div></div>
-            <div class="insp-status due">DUE IN 2 DAYS</div>
-          </div>
-          <div class="insp-bar-wrap"><div class="insp-bar" style="width:93%;background:var(--red);"></div></div>
-          <div class="insp-meta"><span>Last Inspected: Mar 9, 2026</span><span>Next Due: Apr 8, 2026</span></div>
-          <div style="display:flex;gap:8px;margin-top:12px;">
-            <button class="insp-btn" onclick="alert('Opening inspection form for 57 W 57th St...')">Log Inspection</button>
-            <button class="insp-btn outline" onclick="alert('Scheduling certified inspector for 57 W 57th St...')">Schedule Inspector</button>
-          </div>
-        </div>
-
-        <div class="insp-item">
-          <div class="insp-header">
-            <div><div class="insp-name">34-22 Astoria Blvd — Shoring</div><div class="insp-addr">Queens · <span class="permit-num">Q2024-00884</span></div></div>
-            <div class="insp-status soon">DUE IN 4 DAYS</div>
-          </div>
-          <div class="insp-bar-wrap"><div class="insp-bar" style="width:87%;background:var(--yellow);"></div></div>
-          <div class="insp-meta"><span>Last Inspected: Mar 11, 2026</span><span>Next Due: Apr 10, 2026</span></div>
-          <div style="display:flex;gap:8px;margin-top:12px;">
-            <button class="insp-btn" onclick="alert('Opening inspection form for Astoria Blvd...')">Log Inspection</button>
-            <button class="insp-btn outline" onclick="alert('Scheduling...')">Schedule Inspector</button>
-          </div>
-        </div>
-
-        <div class="insp-item">
-          <div class="insp-header">
-            <div><div class="insp-name">200 Water St — Sidewalk Shed</div><div class="insp-addr">Manhattan · <span class="permit-num">M2024-02003</span></div></div>
-            <div class="insp-status soon">DUE IN 6 DAYS</div>
-          </div>
-          <div class="insp-bar-wrap"><div class="insp-bar" style="width:80%;background:var(--yellow);"></div></div>
-          <div class="insp-meta"><span>Last Inspected: Mar 15, 2026</span><span>Next Due: Apr 14, 2026</span></div>
-          <div style="display:flex;gap:8px;margin-top:12px;">
-            <button class="insp-btn" onclick="alert('Opening inspection form for 200 Water St...')">Log Inspection</button>
-            <button class="insp-btn outline" onclick="alert('Scheduling...')">Schedule Inspector</button>
-          </div>
-        </div>
-
-        <div class="insp-item">
-          <div class="insp-header">
-            <div><div class="insp-name">88 Court St — System Scaffold</div><div class="insp-addr">Brooklyn · <span class="permit-num">BK2024-02901</span></div></div>
-            <div class="insp-status ok">OK · 18 DAYS</div>
-          </div>
-          <div class="insp-bar-wrap"><div class="insp-bar" style="width:40%;background:var(--green);"></div></div>
-          <div class="insp-meta"><span>Last Inspected: Mar 22, 2026</span><span>Next Due: Apr 21, 2026</span></div>
+        <div style="text-align:right">
+          <div class="lien-amount">$63,014</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Filed 2024</div>
         </div>
       </div>
-
-      <!-- AI INBOX -->
-      <div class="page" id="page-aiinbox">
-        <div class="page-header">
-          <div class="page-title">AI Inbox</div>
-          <div class="page-sub">Paste emails from GCs, owners, or bid portals — Claude extracts project leads, scopes, and next actions</div>
+      <div class="lien-card">
+        <div class="lien-main">
+          <div class="lien-client">Castle Construction & Maintenance Corp</div>
+          <div class="lien-addr">202 East 29th Street · <span style="color:var(--rock);font-weight:500">Rock</span></div>
+          <div class="lien-status filed">Lien Filed — No permit renewal</div>
         </div>
-
-        <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap;">
-          <div class="ai-badge">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/><path d="M4 6l1.5 1.5L8 4.5" stroke="white" stroke-width="1.2" fill="none"/></svg>
-            Powered by Claude AI
-          </div>
-          <span style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;">Automatically extracts: project scope · addresses · timelines · contacts · bid deadlines</span>
-        </div>
-
-        <div class="ai-input-area">
-          <label>Paste Email Content</label>
-          <textarea id="ai-email-input" placeholder="Paste an email from a GC, building owner, or bid portal here...&#10;&#10;Claude will analyze it and extract: project location, scope of work, timeline, contacts, and recommended next action."></textarea>
-          <div class="ai-actions">
-            <button class="ai-btn" id="ai-analyze-btn" onclick="analyzeEmail()">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M7 4v3l2 1.5"/></svg>
-              Analyze Email
-            </button>
-            <button class="ai-btn-ghost" onclick="draftReply()">Draft Reply</button>
-            <button class="ai-btn-ghost" onclick="clearAI()">Clear</button>
-          </div>
-          <div class="sample-emails">
-            <div class="sample-label">Load Sample Email:</div>
-            <span class="sample-pill" onclick="loadSample('bid')">Bid Request from GC</span>
-            <span class="sample-pill" onclick="loadSample('emergency')">Emergency Shoring</span>
-            <span class="sample-pill" onclick="loadSample('renewal')">Permit Renewal Notice</span>
-            <span class="sample-pill" onclick="loadSample('owner')">Building Owner Inquiry</span>
-          </div>
-        </div>
-
-        <div class="ai-thinking" id="ai-thinking">
-          <div class="thinking-dots"><span></span><span></span><span></span></div>
-          <div class="thinking-text">Claude is analyzing your email...</div>
-        </div>
-
-        <div class="ai-result" id="ai-result">
-          <div class="ai-result-header">
-            <div class="ai-result-icon">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M5 8l2 2 4-4"/></svg>
-            </div>
-            <div>
-              <div class="ai-result-title">Analysis Complete</div>
-              <div class="ai-result-sub" id="ai-result-sub">Email processed · Lead extracted</div>
-            </div>
-          </div>
-          <div class="ai-result-body" id="ai-result-body"></div>
-          <div class="ai-result-actions">
-            <button class="ai-btn" onclick="alert('Creating job record in Active Jobs...')">Create Job Record</button>
-            <button class="ai-btn-ghost" onclick="alert('Opening SharePoint to save this lead...')">Save to SharePoint</button>
-            <button class="ai-btn-ghost" onclick="draftReply()">Draft Reply</button>
-          </div>
+        <div style="text-align:right">
+          <div class="lien-amount">$60,677</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Filed 2024</div>
         </div>
       </div>
-
-      <!-- SHAREPOINT / DOCUMENTS -->
-      <div class="page" id="page-sharepoint">
-        <div class="page-header">
-          <div class="page-title">Documents</div>
-          <div class="page-sub">SharePoint sync · Permits, engineering drawings, inspection reports</div>
+      <div class="lien-card">
+        <div class="lien-main">
+          <div class="lien-client">RSG Construction Corp</div>
+          <div class="lien-addr">601 West 160th Street · <span style="color:var(--plat);font-weight:500">PLATINUM</span> (incl. Rock balance)</div>
+          <div class="lien-status active">Lien Filed</div>
         </div>
-        <div class="panel">
-          <div class="panel-title">SharePoint Sync Status <span class="count">LAST SYNC: 11:58 AM</span></div>
-          <div class="sync-row"><div><div class="sync-info">57 W 57th St — Engineering Drawings</div><div class="sync-meta">Rev. 3 · Uploaded Apr 8</div></div><div class="sync-badge synced">Synced</div></div>
-          <div class="sync-row"><div><div class="sync-info">34-22 Astoria Blvd — Shoring Calculations</div><div class="sync-meta">PE Stamped · Apr 1</div></div><div class="sync-badge synced">Synced</div></div>
-          <div class="sync-row"><div><div class="sync-info">57 W 57th St — Inspection Report #3</div><div class="sync-meta">Marco Ruiz · Today 11:42 AM</div></div><div class="sync-badge pending">Syncing...</div></div>
-          <div class="sync-row"><div><div class="sync-info">1421 Ocean Ave — DOB Permit</div><div class="sync-meta">Approved today</div></div><div class="sync-badge synced">Synced</div></div>
-          <div class="sync-row"><div><div class="sync-info">88 Court St — Safety Plan</div><div class="sync-meta">Updated Mar 30</div></div><div class="sync-badge synced">Synced</div></div>
-          <div class="sync-row"><div><div class="sync-info">170 W 193rd St — Permit Application</div><div class="sync-meta">Submitted Apr 2 · Pending DOB</div></div><div class="sync-badge pending">Pending DOB</div></div>
-        </div>
-        <div class="panel">
-          <div class="panel-title">Quick Upload</div>
-          <div style="background:var(--card);border:1px dashed var(--border2);padding:40px;text-align:center;cursor:pointer;" onclick="alert('File upload: connect to your SharePoint tenant via Kane PC · Ask about setup')">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="var(--muted)" stroke-width="1.5" style="margin:0 auto 12px;display:block;"><path d="M16 4v18M10 8l6-6 6 6"/><path d="M4 22v4a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2v-4"/></svg>
-            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.08em;">DROP FILES OR CLICK TO UPLOAD</div>
-            <div style="font-size:12px;color:var(--steel);margin-top:6px;">Inspection reports, permits, drawings — synced to SharePoint automatically</div>
-          </div>
+        <div style="text-align:right">
+          <div class="lien-amount">$45,534</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Includes Rock balance</div>
         </div>
       </div>
+      <div class="lien-card">
+        <div class="lien-main">
+          <div class="lien-client">Genesis Builders Consortium, LLC</div>
+          <div class="lien-addr">63 Dean Street, Brooklyn · <span style="color:var(--fort);font-weight:500">FORT</span></div>
+          <div class="lien-status filed">Lien Filed</div>
+        </div>
+        <div style="text-align:right">
+          <div class="lien-amount">$34,215</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Filed 2024</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--bg2);border-radius:8px;display:flex;gap:24px;font-size:12px;color:var(--muted)">
+        <span>+ 10 additional liens</span>
+        <span style="color:var(--red);font-weight:600">Total exposed: $683,942</span>
+        <span style="margin-left:auto">Lien management is <strong>admin-only</strong></span>
+      </div>
+    </div>
 
-    </div><!-- /content -->
-  </div><!-- /app-body -->
-</div><!-- /app -->
+    <!-- ── ARCHIVE VIEW ── -->
+    <div class="view" id="view-archive">
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">Paid & Closed Jobs</div>
+          <div class="stat-value">2,709</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Historical records</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Received (Archive)</div>
+          <div class="stat-value">$14.2M</div>
+          <div style="font-size:11px;color:var(--green);margin-top:2px">All-time collected</div>
+        </div>
+      </div>
+      <div class="data-table-wrap" style="padding:20px;text-align:center;color:var(--muted)">
+        <div style="font-size:28px;margin-bottom:8px">🗄</div>
+        <div style="font-size:14px;font-weight:500;margin-bottom:4px">2,709 archived records</div>
+        <div style="font-size:12px">Search by address, client name, or Job No. to retrieve historical records</div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ── AI PANEL ── -->
+<div id="ai-panel">
+  <div class="ai-panel-header">
+    <div class="ai-panel-logo">✦</div>
+    <div>
+      <div class="ai-panel-title">FIELD OPS AI</div>
+      <div class="ai-panel-sub">Powered by Claude · Platinum context loaded</div>
+    </div>
+    <button class="ai-close" onclick="toggleAI()">✕</button>
+  </div>
+
+  <div class="ai-quick">
+    <div class="ai-quick-label">Quick Questions</div>
+    <button class="ai-quick-btn" onclick="askAI('What permits are expiring in the next 90 days?')">📋 What permits are expiring in the next 90 days?</button>
+    <button class="ai-quick-btn" onclick="askAI('What liens are open and need attention?')">⚖ What liens are open and need attention?</button>
+    <button class="ai-quick-btn" onclick="askAI('Which jobs have overdue receivables above $50K?')">💰 Which jobs have overdue receivables above $50K?</button>
+    <button class="ai-quick-btn" onclick="askAI('Summarize the current financial position across PLATINUM, Rock, and FORT.')">📊 Financial summary across all three companies</button>
+    <button class="ai-quick-btn" onclick="askAI('Which Rock jobs have permits that expired and have not been renewed?')">🚨 Rock jobs with expired permits not renewed</button>
+  </div>
+
+  <div class="ai-messages" id="ai-messages">
+    <div class="ai-msg bot">
+      <div class="ai-bubble">Hi — I have full context on Platinum's 448 active jobs, 14 open liens, and permit expirations. Ask me anything or use a quick question above.</div>
+    </div>
+  </div>
+
+  <div class="ai-input-wrap">
+    <textarea class="ai-input" id="ai-input" placeholder="Ask about any job, permit, or financial detail…" rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI()}"
+      oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+    <button class="ai-send" onclick="sendAI()">↑</button>
+  </div>
+</div>
 
 <script>
-// ── LOGIN ──
-function doLogin() {
-  document.getElementById('login-screen').style.opacity = '0';
-  document.getElementById('login-screen').style.transition = 'opacity 0.4s';
-  setTimeout(() => {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-  }, 400);
-}
-function doLogout() {
-  document.getElementById('login-screen').style.opacity = '1';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('app').style.display = 'none';
+// ── SEED DATA ──
+const JOBS = [
+  {no:1, co:'PLATINUM', client:'York Restoration/SHR', addr:'180 Varick Street', type:'Sidewalk Shed', status:'Installed', permit:'M00997942-I1-SH', expiry:'Sep 29, 2026', due:0, daysLeft:169},
+  {no:1, co:'PLATINUM', client:'York Restoration/SHR', addr:'180 Varick Street', type:'Misc.', status:'Installed', permit:'M00891173-I1-EL', expiry:'Apr 21, 2026', due:0, daysLeft:7},
+  {no:2, co:'PLATINUM', client:'RCR Management', addr:'205 West 88th Street', type:'Sidewalk Shed', status:'Removed', permit:'M00098176-I1-SH', expiry:'Sep 30, 2022', due:0, daysLeft:-550},
+  {no:3, co:'PLATINUM', client:'3 Columbus Circle LLC', addr:'3 Columbus Circle', type:'Sidewalk Shed', status:'Installed', permit:'M00441182-I1-SH', expiry:'May 31, 2026', due:28400, daysLeft:47},
+  {no:4, co:'Rock', client:'RSG Construction Corp', addr:'601 W 160th Street', type:'Sidewalk Shed', status:'Installed', permit:'Not issued', expiry:'—', due:45926, daysLeft:null},
+  {no:5, co:'Rock', client:'Castle Construction', addr:'202 East 29th Street', type:'Pipe Scaffold', status:'Installed', permit:'M00206364', expiry:'Apr 28, 2026', due:60677, daysLeft:14},
+  {no:6, co:'PLATINUM', client:'445 Park Ave Tenant', addr:'445 Park Avenue', type:'Sidewalk Shed', status:'Installed', permit:'M00441182', expiry:'May 31, 2026', due:12000, daysLeft:47},
+  {no:7, co:'FORT', client:'Genesis Builders', addr:'63 Dean Street', type:'Sidewalk Shed', status:'Installed', permit:'F00182741', expiry:'Nov 15, 2026', due:34215, daysLeft:215},
+  {no:8, co:'PLATINUM', client:'Archstone Development', addr:'220 W 148th Street', type:'OHP', status:'Partial Removed', permit:'M00882211', expiry:'Aug 12, 2026', due:9800, daysLeft:120},
+  {no:9, co:'Rock', client:'Marquee Construction', addr:'38 West 21st Street', type:'Fence', status:'Installed', permit:'M00319922', expiry:'Jul 30, 2026', due:5500, daysLeft:107},
+  {no:10, co:'FORT', client:'Hudson Valley Dev.', addr:'120 East 87th Street', type:'Roof Protection', status:'Installed', permit:'M00510044', expiry:'Dec 1, 2026', due:22100, daysLeft:231},
+  {no:11, co:'Transferred', client:'SHR Corp', addr:'88 Leonard Street', type:'Sidewalk Shed', status:'Installed', permit:'M00774421', expiry:'Oct 15, 2026', due:8200, daysLeft:184},
+  {no:12, co:'PLATINUM', client:'Barclays Assoc.', addr:'270 Park Avenue', type:'Pipe Scaffold', status:'Installed', permit:'M00665500', expiry:'Jun 30, 2026', due:67800, daysLeft:77},
+  {no:13, co:'Rock', client:'Metropolitan Housing', addr:'1420 York Avenue', type:'Sidewalk Shed', status:'Partial Installed', permit:'Applied', expiry:'Pending', due:18400, daysLeft:null},
+  {no:14, co:'PLATINUM', client:'NY Presbyterian', addr:'525 East 68th Street', type:'Hoist', status:'Installed', permit:'M00998812', expiry:'Sep 1, 2026', due:124000, daysLeft:140},
+  {no:15, co:'FORT', client:'Rockefeller Group', addr:'1221 Avenue Americas', type:'Needle Beam', status:'Installed', permit:'M00443388', expiry:'Jul 15, 2026', due:38400, daysLeft:92},
+];
+
+let currentRole = 'admin';
+let coFilter = 'all';
+
+// ── RENDER JOBS ──
+function renderJobs(data) {
+  const tbody = document.getElementById('jobs-tbody');
+  tbody.innerHTML = '';
+  data.forEach(j => {
+    const coClass = j.co === 'PLATINUM' ? 'plat' : j.co === 'Rock' ? 'rock' : j.co === 'FORT' ? 'fort' : 'trans';
+    const statusClass = j.status === 'Installed' ? 'installed' : j.status === 'Removed' ? 'removed' : 'partial';
+    let permitBadge = '';
+    if (j.daysLeft === null) permitBadge = `<div class="permit-badge none">Pending</div>`;
+    else if (j.daysLeft < 0) permitBadge = `<div class="permit-badge none">Expired</div>`;
+    else if (j.daysLeft <= 14) permitBadge = `<div class="permit-badge urgent">${j.daysLeft}d</div>`;
+    else if (j.daysLeft <= 60) permitBadge = `<div class="permit-badge soon">${j.daysLeft}d</div>`;
+    else permitBadge = `<div class="permit-badge ok">${j.daysLeft}d</div>`;
+
+    const dueStr = j.due > 0
+      ? `<span class="due-amount">$${j.due.toLocaleString()}</span>`
+      : `<span style="color:var(--subtle)">—</span>`;
+
+    const finCell = (currentRole === 'pm')
+      ? `<td><span class="locked-overlay" style="font-size:10px;padding:2px 6px;border:none;background:none;color:var(--subtle)">🔒</span></td>`
+      : `<td class="amount-cell">${dueStr}</td>`;
+
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">#${j.no}</td>
+        <td><div class="co-pill ${coClass}">${j.co}</div></td>
+        <td style="font-size:12px">${j.client}</td>
+        <td style="font-size:12px;font-weight:500">${j.addr}</td>
+        <td style="font-size:12px">${j.type}</td>
+        <td><div class="status-pill ${statusClass}">${j.status}</div></td>
+        <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">${j.permit}</td>
+        <td>${permitBadge}</td>
+        ${finCell}
+      </tr>`);
+  });
+  document.getElementById('job-count').textContent = data.length + ' jobs';
 }
 
-// ── NAV ──
-function showPage(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+function filterCo(co, btn) {
+  coFilter = co;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.className = 'filter-btn';
+  });
+  if(co === 'all') btn.style.cssText = 'background:var(--navy);color:#fff;border-color:var(--navy)';
+  else if(co === 'PLATINUM') btn.className = 'filter-btn active-plat';
+  else if(co === 'Rock') btn.className = 'filter-btn active-rock';
+  else if(co === 'FORT') btn.className = 'filter-btn active-fort';
+  else { btn.className='filter-btn'; btn.style.background='#f0f2f7'; }
+  applyFilters();
+}
+
+function filterStatus(val) {
+  applyFilters();
+}
+
+function applyFilters() {
+  let data = [...JOBS];
+  if (coFilter !== 'all') data = data.filter(j => j.co === coFilter);
+  renderJobs(data);
+}
+
+function searchJobs(q) {
+  if (!q) { renderJobs(JOBS); return; }
+  const lq = q.toLowerCase();
+  renderJobs(JOBS.filter(j => j.addr.toLowerCase().includes(lq) || j.client.toLowerCase().includes(lq) || j.permit.toLowerCase().includes(lq)));
+}
+
+// ── NAVIGATION ──
+function nav(id, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
   if(el) el.classList.add('active');
+  const titles = {dashboard:'Dashboard',jobs:'Jobs Registry',permits:'Permit Hub',financials:'Financials',liens:'Lien Management',archive:'Archive'};
+  document.getElementById('topbar-title').textContent = titles[id] || id;
+  if (id === 'jobs') renderJobs(JOBS);
+  if (id === 'financials') renderFinancials();
 }
 
-// ── FIELD LOG ──
-function submitLog() {
-  const text = document.getElementById('log-text').value.trim();
-  const job = document.getElementById('log-job').value;
-  const type = document.getElementById('log-type').value;
-  const crew = document.getElementById('log-crew').value || 'Field Crew';
-  if(!text) { alert('Please enter a field note.'); return; }
-  const now = new Date();
-  const time = now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  const entry = document.createElement('div');
-  entry.className = 'log-entry';
-  entry.style.animation = 'none';
-  entry.style.borderColor = 'rgba(240,180,41,0.3)';
-  entry.innerHTML = `
-    <div class="log-entry-header"><div class="log-entry-job">${job.split('—')[0].trim()}</div><div class="log-entry-time">Today · ${time} · ${crew}</div></div>
-    <div class="log-entry-type">${type}</div>
-    <div class="log-entry-text">${text}</div>
-  `;
-  document.getElementById('log-entries').prepend(entry);
-  document.getElementById('log-text').value = '';
-  document.getElementById('log-crew').value = '';
-  setTimeout(() => entry.style.borderColor = 'var(--border)', 2000);
+// ── ROLE ──
+function setRole(role, btn) {
+  currentRole = role;
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // financial nav visibility
+  const finNav = document.getElementById('nav-financials');
+  if (role === 'pm') finNav.style.opacity = '.35';
+  else finNav.style.opacity = '1';
+  renderFinancials();
+  if (document.getElementById('view-jobs').classList.contains('active')) renderJobs(JOBS);
 }
 
-// ── SAMPLE EMAILS ──
-const samples = {
-  bid: `From: james.chen@empirestateconstruction.com
-To: quotes@platinumny.com
-Subject: Scaffold Quote Request — 1100 Avenue of the Americas, Manhattan
-
-Hi Platinum,
-
-We're the GC on a façade restoration project at 1100 Avenue of the Americas (Midtown Manhattan) and are looking for quotes on scaffolding services.
-
-Project scope:
-- Full pipe scaffold on south and west elevations (approx. 18 stories, 220 LF each)
-- Sidewalk shed required for 6th Ave frontage (approx. 80 LF)
-- Potential debris chute from floors 12-18
-
-Target start date: May 15, 2026
-Duration: Approximately 8–10 months
-
-Please provide a quote by April 18th. We can arrange a site walk April 12 or 13 if helpful.
-
-Best,
-James Chen
-Project Manager — Empire State Construction
-(212) 555-0180`,
-
-  emergency: `From: rlopez@brooklynbuildinggroup.com
-To: info@platinumny.com
-Subject: URGENT — Emergency Shoring Needed — 822 Pacific St, Brooklyn
-
-Platinum,
-
-We have an emergency situation at 822 Pacific Street, Crown Heights, Brooklyn. During demolition of the adjacent structure this morning, we discovered signs of movement in the party wall. DOB has been notified and we need emergency shoring in place ASAP — preferably today or first thing tomorrow.
-
-Building is a 4-story brownstone, party wall is approx. 40 feet high.
-
-Please call me immediately: Roberto Lopez, (718) 555-0241.
-
-This is time-sensitive — we may have a stop work order by end of day if shoring isn't in place.`,
-
-  renewal: `From: noreply@nyc.gov
-To: permits@platinumny.com
-Subject: DOB Permit Renewal Notice — BK2024-02901
-
-DEPARTMENT OF BUILDINGS
-City of New York
-
-This is an automated notice that the following permit is due for renewal:
-
-Permit No: BK2024-02901
-Site Address: 88 Court Street, Brooklyn, NY 11201
-Work Type: Scaffold — System Scaffolding
-Expiration Date: April 30, 2026
-Renewal Deadline: April 20, 2026
-
-Failure to renew by the deadline may result in permit expiration and Stop Work Order issuance.
-
-To renew, log in to DOB NOW at dobonline.nyc.gov.`,
-
-  owner: `From: margaret.okonkwo@okonkworealty.com
-To: quotes@platinumny.com
-Subject: Scaffolding for Window Replacement Project — Bronx
-
-Hello,
-
-I'm the owner of a 6-story residential building at 2244 Grand Ave, Bronx, NY 10468. We're planning a window replacement project starting in June and our architect has recommended we get a scaffold installed to allow window crews safe access on all four elevations.
-
-I've never dealt with this before — can you walk me through the process? I understand DOB permits are involved. The building is about 60 feet tall and roughly 60 x 80 ft footprint.
-
-Please let me know about pricing and timeline. Our window contractor is ready to go in June so we'd need scaffold up by June 1.
-
-Thank you,
-Margaret Okonkwo
-Okonkwo Realty LLC
-(347) 555-0312`
-};
-
-function loadSample(key) {
-  document.getElementById('ai-email-input').value = samples[key];
-  document.getElementById('ai-result').classList.remove('show');
+function renderFinancials() {
+  const el = document.getElementById('financials-content');
+  if (currentRole === 'pm') {
+    el.innerHTML = `<div class="financial-restricted"><div style="font-size:36px">🔒</div><div style="font-size:15px;font-weight:500;color:var(--text)">Financials — Admin & Accounting Access Only</div><div style="font-size:13px">Switch role to Admin or Accounting to view financial data.</div></div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-label">Total Outstanding</div><div class="stat-value">$5,053,400</div></div>
+      <div class="stat-card"><div class="stat-label">PLATINUM Receivable</div><div class="stat-value" style="color:var(--plat)">$2,841,200</div></div>
+      <div class="stat-card"><div class="stat-label">Rock Receivable</div><div class="stat-value" style="color:var(--rock)">$1,623,800</div></div>
+      <div class="stat-card"><div class="stat-label">FORT Receivable</div><div class="stat-value" style="color:var(--fort)">$588,400</div></div>
+    </div>
+    <div class="data-table-wrap">
+      <div class="data-table-toolbar"><span style="font-size:13px;font-weight:500">Receivables by Range</span></div>
+      <div style="padding:16px;">
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;">
+          ${[['<$10K','$284K','62'],['$10K–$25K','$412K','28'],['$25K–$50K','$698K','21'],['$50K–$100K','$934K','14'],['$100K–$200K','$1.24M','9'],['$200K–$500K','$860K','4'],['$500K+','$622K','2']].map(([l,a,c])=>`<div style="background:var(--bg);border-radius:6px;padding:10px;"><div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:4px">${l}</div><div style="font-size:14px;font-weight:600;font-family:'DM Mono',monospace">${a}</div><div style="font-size:10px;color:var(--subtle)">${c} jobs</div></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
 }
 
-// ── AI ANALYSIS ──
-async function analyzeEmail() {
-  const emailText = document.getElementById('ai-email-input').value.trim();
-  if(!emailText) { alert('Please paste an email to analyze.'); return; }
+// ── SIDEBAR ──
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
 
-  const btn = document.getElementById('ai-analyze-btn');
-  btn.disabled = true;
-  btn.textContent = 'Analyzing...';
-  document.getElementById('ai-thinking').classList.add('show');
-  document.getElementById('ai-result').classList.remove('show');
+// ── AI PANEL ──
+const SYSTEM_PROMPT = `You are the Platinum Field Ops AI assistant for Platinum Services NY LLC, a scaffolding company in New York City. You have access to their current operations data:
 
-  const systemPrompt = `You are an AI assistant for Platinum Services NY LLC, a professional scaffolding company based in Long Island City, Queens, NY. You help the team analyze incoming emails to extract project leads, identify scope of work, and recommend next actions.
+COMPANIES: PLATINUM (primary, 284 jobs, $2.84M receivable), Rock (legacy entity, 131 jobs, $1.62M receivable), FORT (33 jobs, $588K receivable), Transferred (misc)
 
-When analyzing an email, extract and format the following in clean HTML (no markdown, use <strong>, <h4>, <ul>, <li> tags only):
+PERMITS EXPIRING SOON:
+- 180 Varick St (PLATINUM): Permit M00891173-I1-EL expires Apr 21, 2026 — 7 DAYS — URGENT
+- 202 E 29th St (Rock): Permit M00206364 expires Apr 28, 2026 — 14 days
+- 445 Park Ave (PLATINUM): Permit M00441182 expires May 31, 2026 — 47 days
+- 8 total permits expiring within 90 days
 
-1. Lead Priority (HIGH / MEDIUM / LOW) with a one-line reason
-2. Project Details: address, borough, type of scaffolding needed, approximate size/floors
-3. Timeline & Deadline information
-4. Key Contact with name, company, phone/email if available
-5. Estimated Revenue Opportunity (rough range based on NYC scaffolding rates)
-6. Recommended Next Action (specific, actionable — e.g., "Call Roberto Lopez today at (718) 555-0241 to confirm emergency availability")
-7. Any DOB or permit considerations specific to NYC
+OPEN LIENS (14 total, $683,942 total exposure):
+- AKI Development, 30-11 12th St Queens (Rock): $63,014 — filed 2024
+- Castle Construction, 202 E 29th St (Rock): $60,677 — filed, no permit renewal, material not removed by owner
+- RSG Construction, 601 W 160th St (PLATINUM incl. Rock): $45,534
+- Genesis Builders, 63 Dean St Brooklyn (FORT): $34,215
+- Plus 10 additional open liens
 
-Be concise, professional, and specific to scaffolding. Use Platinum Services' perspective as a licensed NYC scaffolding contractor.`;
+FINANCIAL RANGES (receivable by job size):
+- <$10K: $284K across 62 jobs
+- $10K–$25K: $412K across 28 jobs
+- $25K–$50K: $698K across 21 jobs
+- $50K–$100K: $934K across 14 jobs
+- $100K–$200K: $1.24M across 9 jobs (largest bucket)
+- $200K–$500K: $860K across 4 jobs
+- $500K+: $622K across 2 jobs
+
+KEY ACTIVE JOBS:
+- 180 Varick St: Sidewalk Shed + Misc installed, permit expiring soon
+- 202 E 29th St: Pipe Scaffold, lien filed, permit expiring in 14 days
+- NY Presbyterian 525 E 68th St (PLATINUM): Hoist installed, $124K due
+- 270 Park Ave (PLATINUM): Pipe Scaffold, $67,800 due
+
+Answer questions concisely and professionally. Flag urgent items clearly. For financial questions, always note which company the amounts belong to.`;
+
+function toggleAI() {
+  document.getElementById('ai-panel').classList.toggle('open');
+}
+
+async function askAI(question) {
+  const messages = document.getElementById('ai-messages');
+  // Add user message
+  messages.insertAdjacentHTML('beforeend', `<div class="ai-msg user"><div class="ai-bubble">${question}</div></div>`);
+  // Typing indicator
+  const typing = document.createElement('div');
+  typing.className = 'ai-msg bot';
+  typing.innerHTML = '<div class="ai-typing"><span></span><span></span><span></span></div>';
+  messages.appendChild(typing);
+  messages.scrollTop = messages.scrollHeight;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: `Analyze this email for Platinum Services:\n\n${emailText}` }]
+        system: SYSTEM_PROMPT,
+        messages: [{role: 'user', content: question}]
       })
     });
-    const data = await resp.json();
-    const text = data.content?.find(b => b.type === 'text')?.text || 'No analysis returned.';
-    document.getElementById('ai-result-body').innerHTML = text;
-    document.getElementById('ai-result-sub').textContent = 'Email processed · Lead extracted · ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-    document.getElementById('ai-result').classList.add('show');
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Unable to get response.';
+    typing.remove();
+    messages.insertAdjacentHTML('beforeend', `<div class="ai-msg bot"><div class="ai-bubble">${reply.replace(/\n/g,'<br>')}</div></div>`);
   } catch(e) {
-    document.getElementById('ai-result-body').innerHTML = `<strong>Demo Mode:</strong> In production, Claude would analyze this email and extract:<br><br>
-<h4>Lead Priority</h4>HIGH — Time-sensitive project with clear scope and established GC contact<br><br>
-<h4>Project Details</h4><ul><li><strong>Address:</strong> 1100 Avenue of the Americas, Manhattan</li><li><strong>Scope:</strong> Full pipe scaffold (18 stories, 440 LF total), sidewalk shed (80 LF), debris chute</li><li><strong>Duration:</strong> 8–10 months</li></ul>
-<h4>Timeline</h4>Quote due <strong>April 18</strong> · Site walk available April 12–13 · Start date May 15<br><br>
-<h4>Key Contact</h4>James Chen, Project Manager · Empire State Construction · (212) 555-0180<br><br>
-<h4>Estimated Revenue</h4><strong>$180,000 – $260,000</strong> based on scope and duration<br><br>
-<h4>Recommended Next Action</h4>Call James Chen today to confirm site walk on April 12. Prepare preliminary estimate by April 15 to allow review before deadline.`;
-    document.getElementById('ai-result-sub').textContent = 'Demo analysis · Connect API key for live results';
-    document.getElementById('ai-result').classList.add('show');
-  } finally {
-    document.getElementById('ai-thinking').classList.remove('show');
-    btn.disabled = false;
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M7 4v3l2 1.5"/></svg> Analyze Email`;
+    typing.remove();
+    messages.insertAdjacentHTML('beforeend', `<div class="ai-msg bot"><div class="ai-bubble">Connection error. Please check your network.</div></div>`);
+  }
+  messages.scrollTop = messages.scrollHeight;
+  document.getElementById('ai-input').value = '';
+}
+
+function sendAI() {
+  const q = document.getElementById('ai-input').value.trim();
+  if (!q) return;
+  askAI(q);
+}
+
+// ── INIT ──
+renderJobs(JOBS);
+renderFinancials();
+</script>
+
+<!-- ── NEW JOB MODAL ── -->
+<style>
+#nj-overlay{
+  position:fixed;inset:0;background:rgba(11,18,36,.7);
+  backdrop-filter:blur(2px);z-index:200;
+  display:none;align-items:center;justify-content:center;
+}
+#nj-overlay.open{display:flex;}
+#nj-modal{
+  background:var(--surface);
+  border-radius:14px;
+  width:920px;max-width:96vw;
+  height:86vh;max-height:700px;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,.28);
+}
+.nj-header{
+  padding:16px 24px;
+  border-bottom:1px solid var(--bg2);
+  display:flex;align-items:center;gap:12px;
+  flex-shrink:0;
+}
+.nj-header-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:700;letter-spacing:.04em;
+}
+.nj-tabs{
+  display:flex;gap:0;
+  background:var(--bg);border:1px solid var(--bg2);
+  border-radius:8px;padding:3px;margin-left:auto;
+}
+.nj-tab{
+  padding:5px 14px;border-radius:6px;
+  font-size:12px;font-weight:500;cursor:pointer;
+  color:var(--muted);border:none;background:none;
+  font-family:'DM Sans',sans-serif;transition:all .15s;
+}
+.nj-tab.active{background:#fff;color:var(--plat);box-shadow:0 1px 3px rgba(0,0,0,.1);}
+.nj-close{
+  margin-left:8px;cursor:pointer;color:var(--muted);
+  font-size:18px;border:none;background:none;transition:color .15s;
+}
+.nj-close:hover{color:var(--text);}
+
+/* WIZARD LAYOUT */
+#nj-wizard{flex:1;display:flex;overflow:hidden;}
+.nj-chat{
+  width:420px;min-width:420px;
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--bg2);
+}
+.nj-chat-messages{
+  flex:1;overflow-y:auto;padding:20px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.nj-msg{max-width:88%;}
+.nj-msg.bot{align-self:flex-start;}
+.nj-msg.user{align-self:flex-end;}
+.nj-bubble{
+  padding:10px 14px;border-radius:10px;
+  font-size:13px;line-height:1.6;
+}
+.nj-msg.bot .nj-bubble{
+  background:var(--bg);color:var(--text);
+  border:1px solid var(--bg2);
+}
+.nj-msg.user .nj-bubble{
+  background:var(--plat);color:#fff;
+}
+.nj-options{
+  display:flex;flex-wrap:wrap;gap:6px;
+  margin-top:6px;
+}
+.nj-opt{
+  padding:5px 12px;border-radius:16px;
+  font-size:12px;font-weight:500;cursor:pointer;
+  border:1px solid var(--bg2);background:#fff;
+  color:var(--text);transition:all .15s;
+  font-family:'DM Sans',sans-serif;
+}
+.nj-opt:hover{border-color:var(--plat);color:var(--plat);}
+.nj-opt.co-plat{border-color:var(--plat);background:var(--plat-l);color:var(--plat);}
+.nj-opt.co-rock{border-color:var(--rock);background:var(--rock-l);color:var(--rock);}
+.nj-opt.co-fort{border-color:var(--fort);background:var(--fort-l);color:var(--fort);}
+
+.nj-input-row{
+  padding:12px 16px;border-top:1px solid var(--bg2);
+  display:flex;gap:8px;
+}
+.nj-input{
+  flex:1;border:1px solid var(--bg2);border-radius:8px;
+  padding:9px 12px;font-size:13px;
+  font-family:'DM Sans',sans-serif;color:var(--text);
+  outline:none;transition:border-color .15s;
+}
+.nj-input:focus{border-color:var(--plat);}
+.nj-send{
+  width:34px;height:34px;background:var(--plat);
+  border:none;border-radius:8px;cursor:pointer;
+  color:#fff;font-size:14px;display:flex;
+  align-items:center;justify-content:center;
+  transition:background .15s;flex-shrink:0;
+}
+.nj-send:hover{background:#0830d4;}
+
+/* LIVE PREVIEW */
+.nj-preview{
+  flex:1;padding:20px;overflow-y:auto;
+  display:flex;flex-direction:column;gap:0;
+}
+.nj-preview-title{
+  font-size:11px;font-weight:600;color:var(--muted);
+  letter-spacing:.07em;text-transform:uppercase;
+  margin-bottom:14px;
+}
+.preview-card{
+  background:var(--bg);border:1px solid var(--bg2);
+  border-radius:10px;padding:16px;margin-bottom:12px;
+}
+.preview-card-title{
+  font-size:10px;font-weight:600;color:var(--muted);
+  letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:10px;
+}
+.preview-row{
+  display:flex;justify-content:space-between;
+  align-items:baseline;margin-bottom:7px;font-size:13px;
+}
+.preview-row:last-child{margin-bottom:0;}
+.preview-label{color:var(--muted);font-size:12px;}
+.preview-value{font-weight:500;color:var(--text);}
+.preview-value.empty{color:var(--bg2);font-style:italic;font-size:12px;}
+.preview-value.plat{color:var(--plat);}
+.preview-value.rock{color:var(--rock);}
+.preview-value.fort{color:var(--fort);}
+.preview-value.good{color:var(--green);}
+.preview-value.warn{color:var(--amber);}
+
+.nj-progress{
+  display:flex;gap:4px;margin-bottom:14px;
+}
+.nj-step-dot{
+  flex:1;height:3px;border-radius:2px;
+  background:var(--bg2);transition:background .3s;
+}
+.nj-step-dot.done{background:var(--plat);}
+.nj-step-dot.active{background:var(--plat);opacity:.5;}
+
+.nj-save-btn{
+  width:100%;padding:12px;
+  background:var(--plat);color:#fff;
+  border:none;border-radius:8px;
+  font-size:14px;font-weight:500;
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:background .15s;margin-top:auto;
+  display:none;
+}
+.nj-save-btn:hover{background:#0830d4;}
+.nj-save-btn.show{display:block;}
+
+/* QUICK FORM */
+#nj-quickform{
+  flex:1;overflow-y:auto;padding:24px;
+  display:none;
+}
+#nj-quickform.active{display:block;}
+#nj-wizard.hidden{display:none;}
+.qf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;}
+.qf-field{display:flex;flex-direction:column;gap:5px;}
+.qf-field.full{grid-column:1/-1;}
+.qf-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;}
+.qf-input, .qf-select{
+  border:1px solid var(--bg2);border-radius:7px;
+  padding:9px 12px;font-size:13px;
+  font-family:'DM Sans',sans-serif;color:var(--text);
+  outline:none;background:#fff;transition:border-color .15s;
+}
+.qf-input:focus,.qf-select:focus{border-color:var(--plat);}
+.qf-section{
+  font-size:11px;font-weight:600;color:var(--muted);
+  letter-spacing:.07em;text-transform:uppercase;
+  margin:18px 0 10px;
+  padding-bottom:6px;border-bottom:1px solid var(--bg2);
+  grid-column:1/-1;
+}
+.qf-footer{
+  display:flex;gap:10px;justify-content:flex-end;
+  margin-top:24px;padding-top:16px;border-top:1px solid var(--bg2);
+}
+.qf-btn{
+  padding:9px 20px;border-radius:7px;font-size:13px;
+  font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:all .15s;
+}
+.qf-btn.primary{background:var(--plat);color:#fff;border:none;}
+.qf-btn.primary:hover{background:#0830d4;}
+.qf-btn.secondary{background:#fff;color:var(--muted);border:1px solid var(--bg2);}
+.qf-btn.secondary:hover{border-color:var(--muted);color:var(--text);}
+</style>
+
+<div id="nj-overlay" onclick="if(event.target===this)closeNewJob()">
+  <div id="nj-modal">
+    <div class="nj-header">
+      <div>
+        <div class="nj-header-title">New Job</div>
+      </div>
+      <div class="nj-tabs">
+        <button class="nj-tab active" id="tab-wizard" onclick="switchTab('wizard')">✦ AI Wizard</button>
+        <button class="nj-tab" id="tab-form" onclick="switchTab('form')">≡ Quick Form</button>
+      </div>
+      <button class="nj-close" onclick="closeNewJob()">✕</button>
+    </div>
+
+    <!-- WIZARD TAB -->
+    <div id="nj-wizard">
+      <div class="nj-chat">
+        <div class="nj-chat-messages" id="nj-messages"></div>
+        <div class="nj-input-row">
+          <input class="nj-input" id="nj-input" placeholder="Type your answer…"
+            onkeydown="if(event.key==='Enter')wizardReply(this.value)"/>
+          <button class="nj-send" onclick="wizardReply(document.getElementById('nj-input').value)">↑</button>
+        </div>
+      </div>
+      <div class="nj-preview">
+        <div class="nj-preview-title">Live Preview</div>
+        <div class="nj-progress" id="nj-progress">
+          <div class="nj-step-dot active"></div>
+          <div class="nj-step-dot"></div>
+          <div class="nj-step-dot"></div>
+          <div class="nj-step-dot"></div>
+          <div class="nj-step-dot"></div>
+          <div class="nj-step-dot"></div>
+          <div class="nj-step-dot"></div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-title">Project Info</div>
+          <div class="preview-row"><span class="preview-label">Company</span><span class="preview-value empty" id="pv-co">—</span></div>
+          <div class="preview-row"><span class="preview-label">Client Name</span><span class="preview-value empty" id="pv-client">—</span></div>
+          <div class="preview-row"><span class="preview-label">Job Address</span><span class="preview-value empty" id="pv-addr">—</span></div>
+          <div class="preview-row"><span class="preview-label">Borough</span><span class="preview-value empty" id="pv-boro">—</span></div>
+          <div class="preview-row"><span class="preview-label">Contact</span><span class="preview-value empty" id="pv-contact">—</span></div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-title">Work Details</div>
+          <div class="preview-row"><span class="preview-label">Type of Work</span><span class="preview-value empty" id="pv-type">—</span></div>
+          <div class="preview-row"><span class="preview-label">Quantity</span><span class="preview-value empty" id="pv-qty">—</span></div>
+          <div class="preview-row"><span class="preview-label">Tax Exempt</span><span class="preview-value empty" id="pv-tax">—</span></div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-title">Contract & Financials</div>
+          <div class="preview-row"><span class="preview-label">Contract Amount</span><span class="preview-value empty" id="pv-contract">—</span></div>
+          <div class="preview-row"><span class="preview-label">Rent / Month</span><span class="preview-value empty" id="pv-rent">—</span></div>
+          <div class="preview-row"><span class="preview-label">Contract Term</span><span class="preview-value empty" id="pv-term">—</span></div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-title">Permit</div>
+          <div class="preview-row"><span class="preview-label">Permit Status</span><span class="preview-value empty" id="pv-permit">—</span></div>
+          <div class="preview-row"><span class="preview-label">Install Date</span><span class="preview-value empty" id="pv-install">—</span></div>
+        </div>
+        <button class="nj-save-btn" id="nj-save" onclick="saveJob()">✓ Save Job Record</button>
+      </div>
+    </div>
+
+    <!-- QUICK FORM TAB -->
+    <div id="nj-quickform">
+      <div class="qf-grid">
+        <div class="qf-section">Project Info</div>
+        <div class="qf-field">
+          <label class="qf-label">Company *</label>
+          <select class="qf-select">
+            <option value="">Select company…</option>
+            <option>PLATINUM</option><option>Rock</option>
+            <option>FORT</option><option>Transferred</option>
+          </select>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Client Name *</label>
+          <input class="qf-input" placeholder="e.g. RSG Construction Corp"/>
+        </div>
+        <div class="qf-field full">
+          <label class="qf-label">Job Address *</label>
+          <input class="qf-input" placeholder="e.g. 202 East 29th Street"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Borough</label>
+          <select class="qf-select">
+            <option value="">Select…</option>
+            <option>Manhattan</option><option>Brooklyn</option>
+            <option>Queens</option><option>Bronx</option>
+            <option>Staten Island</option>
+          </select>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Contact Name</label>
+          <input class="qf-input" placeholder="Contact at client"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Contact Phone</label>
+          <input class="qf-input" placeholder="212-555-0000"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Email Address</label>
+          <input class="qf-input" type="email" placeholder="contact@client.com"/>
+        </div>
+
+        <div class="qf-section">Work Details</div>
+        <div class="qf-field">
+          <label class="qf-label">Type of Work *</label>
+          <select class="qf-select">
+            <option value="">Select…</option>
+            <option>Sidewalk Shed</option><option>Pipe Scaffold</option>
+            <option>Roof Protection</option><option>Fence</option>
+            <option>Hoist</option><option>OHP</option>
+            <option>Barrier</option><option>Needle Beam</option>
+            <option>Horizontal Netting</option><option>Misc.</option>
+          </select>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Work Quantity</label>
+          <input class="qf-input" placeholder="e.g. 108 LF"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Job Status</label>
+          <select class="qf-select">
+            <option>Installed</option><option>Partial Installed</option>
+            <option>Removed</option><option>Partial Removed</option>
+          </select>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Tax Exempt</label>
+          <select class="qf-select"><option>No</option><option>Yes</option></select>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Installation Date</label>
+          <input class="qf-input" type="date"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">CO #</label>
+          <input class="qf-input" placeholder="Change order number"/>
+        </div>
+
+        <div class="qf-section">Contract & Financials</div>
+        <div class="qf-field">
+          <label class="qf-label">Contract Amount ($)</label>
+          <input class="qf-input" type="number" placeholder="0.00"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Rent / Month ($)</label>
+          <input class="qf-input" type="number" placeholder="0.00"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Initial Contract Term (mo.)</label>
+          <input class="qf-input" type="number" placeholder="3"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Rental Start Month</label>
+          <input class="qf-input" type="month"/>
+        </div>
+
+        <div class="qf-section">Permit</div>
+        <div class="qf-field">
+          <label class="qf-label">Permit No.</label>
+          <input class="qf-input" placeholder="e.g. M00206364"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Permit Status</label>
+          <select class="qf-select">
+            <option value="">Select…</option>
+            <option>Applied</option><option>Approved</option>
+            <option>Active</option><option>Not issued yet</option>
+          </select>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Permit Issue Date</label>
+          <input class="qf-input" type="date"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Permit Expiry Date</label>
+          <input class="qf-input" type="date"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">Inspection Letter Date</label>
+          <input class="qf-input" type="date"/>
+        </div>
+        <div class="qf-field">
+          <label class="qf-label">DOB # (Removal)</label>
+          <input class="qf-input" placeholder="DOB number"/>
+        </div>
+
+        <div class="qf-section">Survey</div>
+        <div class="qf-field full">
+          <label class="qf-label">Survey Tracking #</label>
+          <input class="qf-input" placeholder="Survey tracking number"/>
+        </div>
+      </div>
+
+      <div class="qf-footer">
+        <button class="qf-btn secondary" onclick="closeNewJob()">Cancel</button>
+        <button class="qf-btn primary" onclick="saveQuickForm()">✓ Save Job Record</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── WIZARD STATE ──
+const WIZARD_STEPS = [
+  {
+    key: 'co',
+    ask: "Which company is this job under?",
+    options: [
+      {label:'PLATINUM', cls:'co-plat'},
+      {label:'Rock', cls:'co-rock'},
+      {label:'FORT', cls:'co-fort'},
+      {label:'Transferred', cls:''}
+    ],
+    previewId: 'pv-co',
+    previewClass: {PLATINUM:'plat',Rock:'rock',FORT:'fort'}
+  },
+  {
+    key: 'client',
+    ask: "Who is the client? Enter the company or person name.",
+    previewId: 'pv-client'
+  },
+  {
+    key: 'addr',
+    ask: "What is the full job address? Include street and borough.",
+    previewId: 'pv-addr',
+    onAnswer: (val) => {
+      const boroughs = ['Manhattan','Brooklyn','Queens','Bronx','Staten Island'];
+      const found = boroughs.find(b => val.toLowerCase().includes(b.toLowerCase()));
+      if(found) {
+        wz.data.boro = found;
+        const el = document.getElementById('pv-boro');
+        el.textContent = found; el.className='preview-value';
+      }
+    }
+  },
+  {
+    key: 'type',
+    ask: "What type of work is this?",
+    options: [
+      {label:'Sidewalk Shed'},{label:'Pipe Scaffold'},{label:'Roof Protection'},
+      {label:'Fence'},{label:'Hoist'},{label:'OHP'},
+      {label:'Barrier'},{label:'Needle Beam'},{label:'Misc.'}
+    ],
+    previewId: 'pv-type'
+  },
+  {
+    key: 'qty',
+    ask: "What is the work quantity and unit? (e.g. 108 LF, 2,760 SF, 3 Cars)",
+    previewId: 'pv-qty'
+  },
+  {
+    key: 'contract',
+    ask: "What is the contract amount and monthly rent? (e.g. $12,000 contract, $400/month)",
+    previewId: 'pv-contract',
+    onAnswer: (val) => {
+      const rentMatch = val.match(/\$?([\d,]+)\s*(?:\/month|per month|monthly|\/mo)/i);
+      if(rentMatch) {
+        wz.data.rent = rentMatch[1];
+        const el = document.getElementById('pv-rent');
+        el.textContent = '$' + rentMatch[1] + '/mo'; el.className='preview-value good';
+      }
+    }
+  },
+  {
+    key: 'permit',
+    ask: "What's the permit situation?",
+    options: [
+      {label:'Applied — waiting on DOB'},
+      {label:'Permit approved, not yet issued'},
+      {label:'Active permit — I have the number'},
+      {label:'No permit yet'}
+    ],
+    previewId: 'pv-permit',
+    onAnswer: (val) => {
+      if(val.toLowerCase().includes('have the number') || val.toLowerCase().includes('active')) {
+        setTimeout(()=>wizardAsk("Great — what's the permit number and expiry date? (e.g. M00206364, expires Sep 2026)", true), 400);
+      } else {
+        wz.step++;
+        updateProgress();
+        wizardFinish();
+      }
+    },
+    skipNext: true
+  }
+];
+
+let wz = { step: 0, data: {}, awaitingPermitDetail: false };
+
+function openNewJob() {
+  document.getElementById('nj-overlay').classList.add('open');
+  switchTab('wizard');
+  wz = { step: 0, data: {}, awaitingPermitDetail: false };
+  resetPreview();
+  const msgs = document.getElementById('nj-messages');
+  msgs.innerHTML = '';
+  document.getElementById('nj-save').classList.remove('show');
+  updateProgress();
+  setTimeout(()=>{
+    wizardAsk("Hi! I'll help you create a new job record. I'll ask a few quick questions and fill everything in as we go.<br><br>Let's start: <strong>Which company is this job under?</strong>", false, WIZARD_STEPS[0].options);
+  }, 200);
+}
+
+function closeNewJob() {
+  document.getElementById('nj-overlay').classList.remove('open');
+}
+
+function switchTab(tab) {
+  document.getElementById('tab-wizard').classList.toggle('active', tab==='wizard');
+  document.getElementById('tab-form').classList.toggle('active', tab==='form');
+  document.getElementById('nj-wizard').classList.toggle('hidden', tab!=='wizard');
+  document.getElementById('nj-quickform').classList.toggle('active', tab==='form');
+}
+
+function wizardAsk(text, extra=false, options=[]) {
+  const msgs = document.getElementById('nj-messages');
+  const div = document.createElement('div');
+  div.className = 'nj-msg bot';
+  let html = `<div class="nj-bubble">${text}</div>`;
+  if(options.length){
+    html += `<div class="nj-options">${options.map(o=>`<button class="nj-opt ${o.cls||''}" onclick="wizardReply('${o.label}')">${o.label}</button>`).join('')}</div>`;
+  }
+  div.innerHTML = html;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  document.getElementById('nj-input').focus();
+}
+
+function wizardReply(val) {
+  if(!val || !val.trim()) return;
+  document.getElementById('nj-input').value = '';
+
+  const msgs = document.getElementById('nj-messages');
+  msgs.insertAdjacentHTML('beforeend', `<div class="nj-msg user"><div class="nj-bubble">${val}</div></div>`);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  if(wz.awaitingPermitDetail) {
+    wz.data.permitDetail = val;
+    const el = document.getElementById('pv-permit');
+    el.textContent = val; el.className = 'preview-value good';
+    updateProgress();
+    setTimeout(wizardFinish, 300);
+    return;
+  }
+
+  const step = WIZARD_STEPS[wz.step];
+  if(!step) return;
+
+  wz.data[step.key] = val;
+
+  const pvEl = document.getElementById(step.previewId);
+  if(pvEl) {
+    pvEl.textContent = val;
+    pvEl.className = 'preview-value ' + (step.previewClass?.[val] || '');
+  }
+
+  if(step.onAnswer) step.onAnswer(val);
+
+  if(step.skipNext) return;
+
+  wz.step++;
+  updateProgress();
+
+  if(wz.step >= WIZARD_STEPS.length) {
+    setTimeout(wizardFinish, 300);
+  } else {
+    const next = WIZARD_STEPS[wz.step];
+    setTimeout(()=> wizardAsk(next.ask, false, next.options||[]), 350);
   }
 }
 
-async function draftReply() {
-  const emailText = document.getElementById('ai-email-input').value.trim();
-  if(!emailText) { alert('Paste an email first so Claude can draft a reply.'); return; }
-
-  const btn = document.getElementById('ai-analyze-btn');
-  btn.disabled = true;
-  document.getElementById('ai-thinking').classList.add('show');
-  document.getElementById('ai-thinking').querySelector('.thinking-text').textContent = 'Drafting reply...';
-
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: 'You are drafting professional email replies for Platinum Services NY LLC, a licensed NYC scaffolding contractor. Write in a professional but direct tone. Sign off as "Platinum Services NY" with phone (212) 253-2900. Format as plain text, no HTML.',
-        messages: [{ role: 'user', content: `Draft a professional reply to this email. Confirm receipt of their request, indicate we can help, and propose next steps (site walk, call to discuss scope):\n\n${emailText}` }]
-      })
-    });
-    const data = await resp.json();
-    const replyText = data.content?.find(b => b.type === 'text')?.text || 'Draft unavailable.';
-    document.getElementById('ai-result-body').innerHTML = `<h4>Drafted Reply</h4><pre style="font-family:'DM Mono',monospace;font-size:12px;white-space:pre-wrap;color:var(--muted);line-height:1.7;">${replyText}</pre>`;
-    document.getElementById('ai-result-sub').textContent = 'Reply drafted · Ready to send';
-    document.getElementById('ai-result').classList.add('show');
-  } catch(e) {
-    alert('Connect your Anthropic API key to use live draft reply.');
-  } finally {
-    document.getElementById('ai-thinking').classList.remove('show');
-    document.getElementById('ai-thinking').querySelector('.thinking-text').textContent = 'Claude is analyzing your email...';
-    btn.disabled = false;
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M7 4v3l2 1.5"/></svg> Analyze Email`;
-  }
+function updateProgress() {
+  const dots = document.querySelectorAll('.nj-step-dot');
+  dots.forEach((d,i) => {
+    d.classList.remove('done','active');
+    if(i < wz.step) d.classList.add('done');
+    else if(i === wz.step) d.classList.add('active');
+  });
 }
 
-function clearAI() {
-  document.getElementById('ai-email-input').value = '';
-  document.getElementById('ai-result').classList.remove('show');
-  document.getElementById('ai-thinking').classList.remove('show');
+function wizardFinish() {
+  const msgs = document.getElementById('nj-messages');
+  const co = wz.data.co || '';
+  const coColor = co==='PLATINUM'?'#0A38F2':co==='Rock'?'#D97706':co==='FORT'?'#059669':'#6B7794';
+  msgs.insertAdjacentHTML('beforeend', `
+    <div class="nj-msg bot">
+      <div class="nj-bubble">
+        ✓ Job record looks complete for <strong style="color:${coColor}">${co}</strong>.<br><br>
+        Review the preview on the right — everything looks good? Hit <strong>Save Job Record</strong> to add it to the system, or keep chatting if anything needs adjusting.
+      </div>
+    </div>`);
+  msgs.scrollTop = msgs.scrollHeight;
+  document.getElementById('nj-save').classList.add('show');
+
+  const installEl = document.getElementById('pv-install');
+  installEl.textContent = 'Today — ' + new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  installEl.className = 'preview-value';
+}
+
+function resetPreview() {
+  ['pv-co','pv-client','pv-addr','pv-boro','pv-contact','pv-type','pv-qty','pv-tax','pv-contract','pv-rent','pv-term','pv-permit','pv-install'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.textContent='—'; el.className='preview-value empty'; }
+  });
+}
+
+function saveJob() {
+  const co = wz.data.co || '';
+  const addr = wz.data.addr || 'New job';
+  const coClass = co==='PLATINUM'?'plat':co==='Rock'?'rock':co==='FORT'?'fort':'trans';
+  JOBS.unshift({
+    no: JOBS.length+1, co, client: wz.data.client||'', addr,
+    type: wz.data.type||'', status:'Installed',
+    permit: wz.data.permitDetail||'Applied', expiry:'Pending',
+    due:0, daysLeft:null
+  });
+
+  closeNewJob();
+  nav('jobs', document.querySelector('[onclick*=jobs]'));
+  renderJobs(JOBS);
+
+  const toolbar = document.querySelector('.data-table-toolbar');
+  toolbar.insertAdjacentHTML('afterbegin',`
+    <div style="padding:6px 12px;background:#DCFCE7;border:1px solid #BBF7D0;border-radius:6px;font-size:12px;color:#166534;display:flex;align-items:center;gap:6px;margin-right:8px">
+      ✓ <strong>${addr}</strong> added as <span class="co-pill ${coClass}" style="display:inline-flex">${co}</span>
+    </div>`);
+  setTimeout(()=>toolbar.querySelector('div[style*="DCFCE7"]')?.remove(), 4000);
+}
+
+function saveQuickForm() {
+  closeNewJob();
+  nav('jobs', document.querySelector('[onclick*=jobs]'));
 }
 </script>
 </body>
