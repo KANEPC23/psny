@@ -429,38 +429,21 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
 <section class="section" id="gallery" style="background: var(--dark);">
   <div class="section-label">// Project Gallery</div>
   <h2 class="section-title" style="margin-bottom:48px;">Work <span>In The Field</span></h2>
-  <div class="gallery-grid">
-    <div class="gallery-item" style="grid-column: span 2; aspect-ratio: 16/7;">
-      <img src="https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?auto=format&fit=crop&w=1400&q=80" alt="NYC Skyline">
-      <div class="gallery-caption">New York City — Five Boroughs Served</div>
-    </div>
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80" alt="Construction Site">
-      <div class="gallery-caption">Manhattan — High Rise Scaffold</div>
-    </div>
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80" alt="Construction Crew">
-      <div class="gallery-caption">Brooklyn — Crew at Work</div>
-    </div>
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80" alt="NYC Construction">
-      <div class="gallery-caption">Queens — System Scaffold</div>
-    </div>
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?auto=format&fit=crop&w=800&q=80" alt="NYC Skyline Night">
-      <div class="gallery-caption">Bronx — Pipe Scaffold</div>
-    </div>
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=800&q=80" alt="NYC Street">
-      <div class="gallery-caption">Staten Island — Shoring</div>
-    </div>
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1485871981521-5b1fd3805795?auto=format&fit=crop&w=800&q=80" alt="NYC Night">
-      <div class="gallery-caption">LIC — Custom Sidewalk Shed</div>
-    </div>
-  </div>
+  <div id="gallery-grid" class="gallery-grid">
+    <!-- Photos load from Supabase -->
   </div>
 </section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(3,8,46,0.96);flex-direction:column;align-items:center;justify-content:center;">
+  <button onclick="closeLightbox()" style="position:absolute;top:24px;right:32px;background:none;border:none;color:#EEF2FF;font-size:40px;cursor:pointer;line-height:1;z-index:2;">✕</button>
+  <img id="lightbox-img" src="" style="max-width:88vw;max-height:78vh;object-fit:contain;border:1px solid #1535B0;box-shadow:0 0 80px rgba(10,56,242,0.3);">
+  <div id="lightbox-caption" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#F5C518;margin-top:20px;"></div>
+  <div style="display:flex;gap:16px;margin-top:16px;">
+    <button onclick="prevPhoto()" style="background:transparent;border:1px solid #1535B0;color:#EEF2FF;padding:10px 28px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;cursor:pointer;transition:border-color 0.2s;">← PREV</button>
+    <button onclick="nextPhoto()" style="background:transparent;border:1px solid #1535B0;color:#EEF2FF;padding:10px 28px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;cursor:pointer;transition:border-color 0.2s;">NEXT →</button>
+  </div>
+</div>
 
 <!-- CONTACT -->
 <section class="section" id="contact">
@@ -641,7 +624,109 @@ if (quoteForm) {
     }
   });
 }
-</script>
+
+// ── GALLERY ─────────────────────────────────────────────
+let galleryPhotos = [];
+let currentPhoto  = 0;
+
+const SLOT_LABELS = [
+  'Featured Project',
+  'Manhattan — High Rise',
+  'Brooklyn — Sidewalk Shed',
+  'Queens — System Scaffold',
+  'Bronx — Pipe Scaffold',
+  'Staten Island — Shoring',
+  'LIC — Custom Shed',
+  'NYC Aerial View',
+  'Crew at Work'
+];
+
+async function loadGallery() {
+  const grid = document.getElementById('gallery-grid');
+  if (!grid) return;
+
+  if (SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+    renderPlaceholders(grid); return;
+  }
+
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/gallery_items?order=slot_order.asc&select=*`,
+      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    const photos = await res.json();
+    galleryPhotos = photos;
+    grid.innerHTML = '';
+
+    photos.forEach((p, i) => {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      if (i === 0) item.style.gridColumn = 'span 2';
+      item.innerHTML = `<img src="${p.image_url}" alt="${p.caption}" loading="lazy"><div class="gallery-caption">${p.caption}</div>`;
+      item.onclick = () => openLightbox(i);
+      grid.appendChild(item);
+    });
+
+    // Fill remaining with placeholders
+    for (let i = photos.length; i < 9; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'gallery-item';
+      slot.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;color:#1535B0;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="8" width="36" height="26" rx="2"/><circle cx="20" cy="21" r="7"/></svg><span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.4;">${SLOT_LABELS[i] || 'Job Photo'}</span></div>`;
+      grid.appendChild(slot);
+    }
+  } catch(err) {
+    renderPlaceholders(grid);
+  }
+}
+
+function renderPlaceholders(grid) {
+  grid.innerHTML = '';
+  SLOT_LABELS.forEach((label, i) => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    if (i === 0) item.style.gridColumn = 'span 2';
+    item.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;color:#1535B0;"><svg width="44" height="44" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="8" width="36" height="26" rx="2"/><circle cx="20" cy="21" r="7"/><path d="M14 8 L8 2 M26 8 L32 2"/></svg><span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.4;">${label}</span></div>`;
+    grid.appendChild(item);
+  });
+}
+
+function openLightbox(index) {
+  currentPhoto = index;
+  const p = galleryPhotos[index];
+  document.getElementById('lightbox-img').src = p.image_url;
+  document.getElementById('lightbox-caption').textContent = p.caption;
+  document.getElementById('lightbox').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function prevPhoto() {
+  currentPhoto = (currentPhoto - 1 + galleryPhotos.length) % galleryPhotos.length;
+  openLightbox(currentPhoto);
+}
+
+function nextPhoto() {
+  currentPhoto = (currentPhoto + 1) % galleryPhotos.length;
+  openLightbox(currentPhoto);
+}
+
+document.addEventListener('keydown', e => {
+  if (document.getElementById('lightbox').style.display === 'none') return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') prevPhoto();
+  if (e.key === 'ArrowRight') nextPhoto();
+});
+
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+
+loadGallery();
+
 
 </body>
 </html>
