@@ -435,7 +435,7 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
       <div class="gallery-caption">New York City — Five Boroughs Served</div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80" alt="Construction Site">
+      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80" alt="NYC Construction">
       <div class="gallery-caption">Manhattan — High Rise Scaffold</div>
     </div>
     <div class="gallery-item">
@@ -443,16 +443,20 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
       <div class="gallery-caption">Brooklyn — Crew at Work</div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80" alt="Tribeca NYC Scaffolding">
+      <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&q=80" alt="NYC Buildings">
       <div class="gallery-caption">Tribeca — Sidewalk Shed</div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1590579491624-f98f36d4c763?auto=format&fit=crop&w=800&q=80" alt="Flatiron Scaffolding NYC">
+      <img src="https://images.unsplash.com/photo-1590579491624-f98f36d4c763?auto=format&fit=crop&w=800&q=80" alt="Scaffolding">
       <div class="gallery-caption">Flatiron — Pipe Scaffold</div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1565008447742-97f6f38c985c?auto=format&fit=crop&w=800&q=80" alt="Scaffolding Workers">
+      <img src="https://images.unsplash.com/photo-1463797221720-6b07e6426c24?auto=format&fit=crop&w=800&q=80" alt="NYC Skyline Construction">
       <div class="gallery-caption">Queens — System Scaffold</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=800&q=80" alt="NYC Aerial">
+      <div class="gallery-caption">LIC — Custom Sidewalk Shed</div>
     </div>
   </div>
 </section>
@@ -463,7 +467,7 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
     <div>
       <div class="section-label">// Get In Touch</div>
       <h2 class="section-title" style="margin-bottom:40px;">Request<br><span>A Quote</span></h2>
-      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" id="quote-form">
       <div class="form-row">
         <div class="form-field"><label>First Name</label><input type="text" name="first_name" placeholder="James" required></div>
         <div class="form-field"><label>Last Name</label><input type="text" name="last_name" placeholder="Morrison" required></div>
@@ -540,6 +544,103 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
     <div class="footer-copy">© 2025 Platinum Services NY LLC · Long Island City, NY</div>
   </div>
 </footer>
+
+
+<script>
+// ── CONFIG — fill these in before going live ──────────────
+const SUPABASE_URL     = 'YOUR_SUPABASE_URL';       // e.g. https://xxxx.supabase.co
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from Supabase → Settings → API
+// ─────────────────────────────────────────────────────────
+
+let visitorIP = 'unknown';
+
+// Grab visitor IP silently on page load
+fetch('https://api.ipify.org?format=json')
+  .then(r => r.json())
+  .then(d => { visitorIP = d.ip; })
+  .catch(() => { visitorIP = 'unavailable'; });
+
+// Form handler
+const quoteForm = document.querySelector('form');
+if (quoteForm) {
+  quoteForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = quoteForm.querySelector('button[type=submit]');
+    const orig = btn.textContent;
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    const payload = {
+      first_name:   quoteForm.first_name.value.trim(),
+      last_name:    quoteForm.last_name.value.trim(),
+      company:      quoteForm.company.value.trim(),
+      phone:        quoteForm.phone.value.trim(),
+      email:        quoteForm.email.value.trim(),
+      address:      quoteForm.address.value.trim(),
+      service:      quoteForm.service.value,
+      message:      quoteForm.message.value.trim(),
+      ip_address:   visitorIP,
+      user_agent:   navigator.userAgent,
+      submitted_at: new Date().toISOString(),
+      source_url:   window.location.href
+    };
+
+    // 1 — Log to Supabase
+    if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(payload)
+        });
+      } catch(err) {
+        console.warn('Supabase log error:', err);
+      }
+    }
+
+    // 2 — Send via Formspree to hardy@platinumservices.nyc
+    try {
+      const fd = new FormData(quoteForm);
+      fd.append('_ip_address',   visitorIP);
+      fd.append('_submitted_at', payload.submitted_at);
+      fd.append('_user_agent',   navigator.userAgent);
+
+      const res = await fetch(quoteForm.action, {
+        method: 'POST',
+        body: fd,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        quoteForm.reset();
+        btn.textContent = '✓ Request Sent!';
+        btn.style.background = '#34C77B';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.background = '';
+          btn.disabled = false;
+        }, 4000);
+      } else {
+        throw new Error('Formspree error');
+      }
+    } catch(err) {
+      btn.textContent = 'Error — Try Again';
+      btn.style.background = '#EF5B5B';
+      btn.disabled = false;
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.background = '';
+      }, 3000);
+    }
+  });
+}
+</script>
 
 </body>
 </html>
