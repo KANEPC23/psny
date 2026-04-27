@@ -165,7 +165,7 @@ h1 .accent { color: var(--yellow); display: block; }
 
 /* VIDEO HERO */
 .hero-video-wrap { position:absolute;inset:0;overflow:hidden;z-index:0; }
-.hero-video-wrap iframe { position:absolute;top:50%;left:50%;width:177.78vh;height:100vh;min-width:100%;min-height:56.25vw;transform:translate(-50%,-50%);pointer-events:none;opacity:0.3; }
+.hero-video-wrap video { position:absolute;top:50%;left:50%;width:177.78vh;height:100vh;min-width:100%;min-height:56.25vw;transform:translate(-50%,-50%);object-fit:cover;opacity:0.35; }
 .hero-video-overlay { position:absolute;inset:0;z-index:1;background:linear-gradient(160deg,rgba(3,8,46,0.82) 0%,rgba(3,8,46,0.6) 50%,rgba(7,21,64,0.82) 100%); }
 
 /* CONTACT */
@@ -226,7 +226,7 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
 <section class="hero">
   <div class="hero-bg">
     <div class="hero-video-wrap">
-      <iframe src="https://www.youtube-nocookie.com/embed/LmqFzXxRE8A?autoplay=1&mute=1&loop=1&playlist=LmqFzXxRE8A&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <img src="https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?auto=format&fit=crop&w=2000&q=80" alt="NYC Skyline" style="position:absolute;top:50%;left:50%;width:100%;height:100%;transform:translate(-50%,-50%);object-fit:cover;opacity:0.4;">
     </div>
     <div class="hero-video-overlay"></div>
     <div class="hero-bg-base" style="opacity:0.4;"></div>
@@ -431,27 +431,27 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
   <h2 class="section-title" style="margin-bottom:48px;">Work <span>In The Field</span></h2>
   <div class="gallery-grid">
     <div class="gallery-item" style="grid-column: span 2; aspect-ratio: 16/7;">
-      <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=1400&q=80" alt="NYC Skyline Aerial">
+      <img src="https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?auto=format&fit=crop&w=1400&q=80" alt="NYC Skyline Aerial">
       <div class="gallery-caption">Manhattan — NYC Skyline</div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80" alt="Construction Site NYC">
+      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80" alt="Construction Site">
       <div class="gallery-caption">Brooklyn — Construction Site</div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1590579491624-f98f36d4c763?auto=format&fit=crop&w=800&q=80" alt="Scaffolding System">
+      <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&q=80" alt="NYC Buildings">
       <div class="gallery-caption">Queens — System Scaffold</div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&q=80" alt="NYC Buildings">
+      <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80" alt="Construction Workers">
       <div class="gallery-caption">Bronx — Pipe Scaffold</div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80" alt="Construction Workers">
+      <img src="https://images.unsplash.com/photo-1522083165195-3424ed129620?auto=format&fit=crop&w=800&q=80" alt="NYC Night">
       <div class="gallery-caption">Staten Island — Shoring</div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1522083165195-3424ed129620?auto=format&fit=crop&w=800&q=80" alt="NYC Night Skyline">
+      <img src="https://images.unsplash.com/photo-1518235506717-e1ed3306a89b?auto=format&fit=crop&w=800&q=80" alt="NYC Street">
       <div class="gallery-caption">LIC — Custom Sidewalk Shed</div>
     </div>
   </div>
@@ -463,19 +463,20 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
     <div>
       <div class="section-label">// Get In Touch</div>
       <h2 class="section-title" style="margin-bottom:40px;">Request<br><span>A Quote</span></h2>
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
       <div class="form-row">
-        <div class="form-field"><label>First Name</label><input type="text" placeholder="James"></div>
-        <div class="form-field"><label>Last Name</label><input type="text" placeholder="Morrison"></div>
+        <div class="form-field"><label>First Name</label><input type="text" name="first_name" placeholder="James" required></div>
+        <div class="form-field"><label>Last Name</label><input type="text" name="last_name" placeholder="Morrison" required></div>
       </div>
-      <div class="form-field"><label>Company / GC Name</label><input type="text" placeholder="Morrison Construction LLC"></div>
+      <div class="form-field"><label>Company / GC Name</label><input type="text" name="company" placeholder="Morrison Construction LLC"></div>
       <div class="form-row">
-        <div class="form-field"><label>Phone</label><input type="tel" placeholder="(212) 555-0100"></div>
-        <div class="form-field"><label>Email</label><input type="email" placeholder="james@company.com"></div>
+        <div class="form-field"><label>Phone</label><input type="tel" name="phone" placeholder="(212) 555-0100"></div>
+        <div class="form-field"><label>Email</label><input type="email" name="email" placeholder="james@company.com" required></div>
       </div>
-      <div class="form-field"><label>Project Address (NYC)</label><input type="text" placeholder="123 W 57th Street, Manhattan, NY 10019"></div>
+      <div class="form-field"><label>Project Address (NYC)</label><input type="text" name="address" placeholder="123 W 57th Street, Manhattan, NY 10019"></div>
       <div class="form-field">
         <label>Service Needed</label>
-        <select>
+        <select name="service">
           <option value="">Select a service...</option>
           <option>Sidewalk Shed</option>
           <option>Pipe Scaffold</option>
@@ -492,8 +493,9 @@ footer .mw { display: flex; justify-content: space-between; align-items: center;
           <option>Multiple Services</option>
         </select>
       </div>
-      <div class="form-field"><label>Project Details</label><textarea placeholder="Describe your project scope, timeline, and any special requirements..."></textarea></div>
-      <div class="form-submit"><button class="btn-primary" style="border:none;cursor:pointer;width:100%;" onclick="alert('Thank you! Our team will contact you within 24 hours.')">Submit Request →</button></div>
+      <div class="form-field"><label>Project Details</label><textarea name="message" placeholder="Describe your project scope, timeline, and any special requirements..."></textarea></div>
+      <div class="form-submit"><button type="submit" class="btn-primary" style="border:none;cursor:pointer;width:100%;">Submit Request →</button></div>
+      </form>
     </div>
     <div class="contact-info">
       <div class="info-block">
